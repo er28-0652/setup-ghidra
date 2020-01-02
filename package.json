@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "ncc build src/setup-ghidra.ts",
+    "format-check": "prettier --check **/*.ts",
     "test": "jest"
   },
   "jest": {
@@ -14,6 +15,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^24.0.25",
+    "jest": "^24.9.0",
+    "jest-circus": "^24.9.0",
+    "prettier": "^1.19.1",
     "ts-jest": "^24.2.0",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.4"
