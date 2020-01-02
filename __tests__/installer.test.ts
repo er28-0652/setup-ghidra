@@ -21,7 +21,7 @@ describe("installer tests", () => {
       // Download java
       await io.mkdirP(tempDir);
 
-      console.log("Downloading java");
+      console.log("Downloading ghidra");
       child_process.execSync(`curl "${ghidraUrl}" > "${ghidraFilePath}"`);
       // Write complete file so we know it was successful
       fs.writeFileSync(`${ghidraFilePath}.complete`, "content");
