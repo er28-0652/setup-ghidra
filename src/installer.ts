@@ -75,7 +75,7 @@ async function extractFiles(
     throw new Error(`Failed to extract ${file} - it is a directory`);
   }
 
-  await tc.extractZip(file, destinationFolder);
+  await tc.extract7z(file, destinationFolder);
 }
 
 async function extractGhidraArchive(src: string, dst: string): Promise<string> {
