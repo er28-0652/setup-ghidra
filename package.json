@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "ncc build src/setup-ghidra.ts",
+    "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "test": "jest"
   },
