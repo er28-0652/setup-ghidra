@@ -1,0 +1,28 @@
+{
+  "name": "setup-ghidra",
+  "version": "1.0.0",
+  "description": "This action sets up a Ghidra environment for use in actions by:",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build src/setup-ghidra.ts",
+    "test": "jest"
+  },
+  "jest": {
+    "verbose": true
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-jest": "^24.2.0",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/github": "^2.0.0",
+    "@actions/tool-cache": "^1.1.2",
+    "@types/node": "^13.1.2",
+    "typed-rest-client": "^1.7.1"
+  }
+}
