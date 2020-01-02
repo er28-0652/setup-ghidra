@@ -16,9 +16,11 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^24.0.25",
+    "husky": "^3.1.0",
     "jest": "^24.9.0",
     "jest-circus": "^24.9.0",
     "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
     "ts-jest": "^24.2.0",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.4"
@@ -29,5 +31,10 @@
     "@actions/tool-cache": "^1.1.2",
     "@types/node": "^13.1.2",
     "typed-rest-client": "^1.7.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
