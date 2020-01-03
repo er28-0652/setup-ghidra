@@ -3,7 +3,7 @@ import * as installer from "./installer";
 
 async function run() {
   try {
-    let version = core.getInput("latest");
+    let version = core.getInput("version");
 
     if (version) {
       version = version == "latest" ? "" : version;
