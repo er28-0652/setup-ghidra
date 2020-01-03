@@ -6258,7 +6258,7 @@ module.exports = /******/ (function(modules, runtime) {
           var version;
           return __generator(this, function(_a) {
             try {
-              version = core.getInput("latest");
+              version = core.getInput("version");
               if (version) {
                 version = version == "latest" ? "" : version;
                 installer.installGhidra(version);
