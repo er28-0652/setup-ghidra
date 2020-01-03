@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as core from "@actions/core";
+import * as io from "@actions/io";
 import * as tc from "@actions/tool-cache";
 import * as httpm from "typed-rest-client/HttpClient";
 
@@ -68,6 +69,7 @@ async function extractFiles(
   file: string,
   destinationFolder: string
 ): Promise<void> {
+  await io.mkdirP(destinationFolder);
   const stats = fs.statSync(file);
   if (!stats) {
     throw new Error(`Failed to extract ${file} - it doesn't exist`);
