@@ -103,7 +103,7 @@ export async function installGhidra(version: string = ""): Promise<void> {
     if (version === "") {
       let info = await getLatestGhidraVersionInfo();
       Object.entries(info).map(([_version, ghidraZipName]) => {
-        ghidraVersionInfo.version = version;
+        ghidraVersionInfo.version = _version;
         ghidraVersionInfo.archive = ghidraZipName;
       });
     } else {
