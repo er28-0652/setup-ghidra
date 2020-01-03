@@ -128,10 +128,7 @@ export async function installGhidra(version: string = ""): Promise<void> {
       "temp_" + Math.floor(Math.random() * 2000000000)
     );
 
-    let ghidraInstallDir = path.join(
-      await extractGhidraArchive(savedPath, tempDir),
-      `ghidra_${ghidraVersionInfo.version}_PUBLIC`
-    );
+    let ghidraInstallDir = await extractGhidraArchive(savedPath, tempDir);
     toolPath = await tc.cacheDir(ghidraInstallDir, "ghidra", version);
   }
   core.exportVariable("GHIDRA_INSTALL_DIR", toolPath);
