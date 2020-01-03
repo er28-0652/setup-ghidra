@@ -1,11 +1,12 @@
 ---
 name: setup-ghidra
-description: setup Ghidra environment 
+author: er28-0652
+description: setup Ghidra environment
 inputs:
   version:
     description: version of Ghidra
     required: true
     default: latest
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node12"
+  main: "dist/index.js"
