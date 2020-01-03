@@ -39,7 +39,7 @@ describe("installer tests", () => {
 
   it("Installs version of Ghidra if no matching version is installed", async () => {
     await installer.installGhidra("9.1.1");
-    const ghidraDir = path.join(toolDir, "ghidra", "9.1.1");
+    const ghidraDir = path.join(toolDir, "ghidra", "9.1.1", "x64");
 
     expect(fs.existsSync(path.join(ghidraDir, "ghidraRun"))).toBe(true);
   }, 100000);
@@ -56,7 +56,7 @@ describe("installer tests", () => {
 
   it("Get GHIDRA_INSTALL_DIR is defined", async () => {
     await installer.installGhidra("9.1.1");
-    const ghidraDir = path.join(toolDir, "ghidra", "9.1.1");
-    expect(process.env["GHIDRA_INSTALL_DIR"]).toBe(`${ghidraDir}/x64`);
+    const ghidraDir = path.join(toolDir, "ghidra", "9.1.1", "x64");
+    expect(process.env["GHIDRA_INSTALL_DIR"]).toBe(ghidraDir);
   });
 });
