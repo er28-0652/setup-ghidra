@@ -41,7 +41,6 @@ describe("installer tests", () => {
     await installer.installGhidra("9.1.1");
     const ghidraDir = path.join(toolDir, "ghidra", "9.1.1");
 
-    expect(fs.existsSync(`${ghidraDir}.complete`)).toBe(true);
     expect(fs.existsSync(path.join(ghidraDir, "ghidraRun"))).toBe(true);
   }, 100000);
 
