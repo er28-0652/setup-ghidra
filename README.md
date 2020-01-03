@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/er28-0652/setup-ghidra/workflows/Main%20workflow/badge.svg)](https://github.com/er28-0652/setup-ghidra/actions)
+
 # setup-ghidra
 
 This action sets up a Ghidra environment for use in actions by:
