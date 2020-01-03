@@ -57,6 +57,7 @@ describe("installer tests", () => {
 
   it("Get GHIDRA_INSTALL_DIR is defined", async () => {
     await installer.installGhidra("9.1.1");
-    expect(process.env["GHIDRA_INSTALL_DIR"]).toBe(true);
+    const ghidraDir = path.join(toolDir, "ghidra", "9.1.1");
+    expect(process.env["GHIDRA_INSTALL_DIR"]).toBe(`${ghidraDir}/x64`);
   });
 });
