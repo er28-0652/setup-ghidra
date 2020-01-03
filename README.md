@@ -20,7 +20,7 @@ steps:
     java-version: "11.0.x"
     java-package: jdk
     architecture: x64
-  - uses: actions/setup-ghidra@v1
+  - uses: er28-0652/setup-ghidra@v1
     with:
       version: "9.1.1"
 ```
