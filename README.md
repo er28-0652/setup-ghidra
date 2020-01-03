@@ -3,7 +3,6 @@
 This action sets up a Ghidra environment for use in actions by:
 
 - optionally installing a version of Ghidra and adding to GHIDRA_INSTALL_PATH. The action will fail if no matching versions are found. To check available Ghidra version, see release note in https://ghidra-sre.org.
-- registering problem matchers for error output
 
 ## Inputs
 
