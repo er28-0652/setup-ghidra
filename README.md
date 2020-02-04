@@ -14,7 +14,14 @@ This action sets up a Ghidra environment for use in actions by:
 
 ## Usage
 
+Before setup Ghidra, you need to setup Java 11.0.x environment using `actions/setup-java`.
+This action doesn't use Docker, so you can use both Windows, Linux and MacOS for `runs-on` environment.
+
 ```yaml
+runs-on: ${{ matrix.os }}
+strategy:
+  matrix:
+    os: [macos-latest, windows-latest, ubuntu-latest]
 steps:
   - uses: actions/checkout@v1
   - uses: actions/setup-java@v1
