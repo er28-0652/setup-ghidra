@@ -40,7 +40,7 @@ async function getGhidraVersionInfo(): Promise<Dict> {
   ).readBody();
 
   // parse Ghidra version numbre and archive name
-  const ptn = /<td>(\d\.\d\.\d)<\/td>\r\n.*<a href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\">/gi;
+  const ptn = /<td>(\d+\.\d+(?:\.\d+)?)<\/td>\r\n.*<a href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\">/gi;
   let m;
   let versionInfo: Dict = {};
   while ((m = ptn.exec(releaseNoteHTML)) !== null) {
