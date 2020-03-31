@@ -3295,7 +3295,7 @@ module.exports = /******/ (function(modules, runtime) {
                 return [4 /*yield*/, _a.sent().readBody()];
               case 4:
                 releaseNoteHTML = _a.sent();
-                ptn = /<td>(\d\.\d\.\d)<\/td>\r\n.*<a href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\">/gi;
+                ptn = /<td>(\d+\.\d+(?:\.\d+)?)<\/td>\r\n.*<a href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\">/gi;
                 versionInfo = {};
                 while ((m = ptn.exec(releaseNoteHTML)) !== null) {
                   versionInfo[m[1]] = m[2];
@@ -3409,7 +3409,7 @@ module.exports = /******/ (function(modules, runtime) {
                 Object.entries(info).map(function(_a) {
                   var _version = _a[0],
                     ghidraZipName = _a[1];
-                  ghidraVersionInfo_1.version = version;
+                  ghidraVersionInfo_1.version = _version;
                   ghidraVersionInfo_1.archive = ghidraZipName;
                 });
                 return [3 /*break*/, 5];
