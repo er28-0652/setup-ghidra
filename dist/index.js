@@ -1,56 +1,105 @@
-module.exports = /******/ (function(modules, runtime) {
+module.exports = /******/ (() => {
   // webpackBootstrap
-  /******/ "use strict"; // The module cache
-  /******/ /******/ var installedModules = {}; // The require function
-  /******/
-  /******/ /******/ function __webpack_require__(moduleId) {
-    /******/
-    /******/ // Check if module is in cache
-    /******/ if (installedModules[moduleId]) {
-      /******/ return installedModules[moduleId].exports;
-      /******/
-    } // Create a new module (and put it into the cache)
-    /******/ /******/ var module = (installedModules[moduleId] = {
-      /******/ i: moduleId,
-      /******/ l: false,
-      /******/ exports: {}
-      /******/
-    }); // Execute the module function
-    /******/
-    /******/ /******/ modules[moduleId].call(
-      module.exports,
-      module,
-      module.exports,
-      __webpack_require__
-    ); // Flag the module as loaded
-    /******/
-    /******/ /******/ module.l = true; // Return the exports of the module
-    /******/
-    /******/ /******/ return module.exports;
-    /******/
-  }
-  /******/
-  /******/
-  /******/ __webpack_require__.ab = __dirname + "/"; // the startup function
-  /******/
-  /******/ /******/ function startup() {
-    /******/ // Load entry module and return exports
-    /******/ return __webpack_require__(939);
-    /******/
-  } // run startup
-  /******/
-  /******/ /******/ return startup();
-  /******/
-})(
-  /************************************************************************/
-  /******/ {
-    /***/ 16: /***/ function(module) {
-      module.exports = require("tls");
+  /******/ var __webpack_modules__ = {
+    /***/ 351: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
+      "use strict";
+
+      var __importStar =
+        (this && this.__importStar) ||
+        function(mod) {
+          if (mod && mod.__esModule) return mod;
+          var result = {};
+          if (mod != null)
+            for (var k in mod)
+              if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+          result["default"] = mod;
+          return result;
+        };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const os = __importStar(__nccwpck_require__(87));
+      const utils_1 = __nccwpck_require__(278);
+      /**
+       * Commands
+       *
+       * Command Format:
+       *   ::name key=value,key=value::message
+       *
+       * Examples:
+       *   ::warning::This is the message
+       *   ::set-env name=MY_VAR::some value
+       */
+      function issueCommand(command, properties, message) {
+        const cmd = new Command(command, properties, message);
+        process.stdout.write(cmd.toString() + os.EOL);
+      }
+      exports.issueCommand = issueCommand;
+      function issue(name, message = "") {
+        issueCommand(name, {}, message);
+      }
+      exports.issue = issue;
+      const CMD_STRING = "::";
+      class Command {
+        constructor(command, properties, message) {
+          if (!command) {
+            command = "missing.command";
+          }
+          this.command = command;
+          this.properties = properties;
+          this.message = message;
+        }
+        toString() {
+          let cmdStr = CMD_STRING + this.command;
+          if (this.properties && Object.keys(this.properties).length > 0) {
+            cmdStr += " ";
+            let first = true;
+            for (const key in this.properties) {
+              if (this.properties.hasOwnProperty(key)) {
+                const val = this.properties[key];
+                if (val) {
+                  if (first) {
+                    first = false;
+                  } else {
+                    cmdStr += ",";
+                  }
+                  cmdStr += `${key}=${escapeProperty(val)}`;
+                }
+              }
+            }
+          }
+          cmdStr += `${CMD_STRING}${escapeData(this.message)}`;
+          return cmdStr;
+        }
+      }
+      function escapeData(s) {
+        return utils_1
+          .toCommandValue(s)
+          .replace(/%/g, "%25")
+          .replace(/\r/g, "%0D")
+          .replace(/\n/g, "%0A");
+      }
+      function escapeProperty(s) {
+        return utils_1
+          .toCommandValue(s)
+          .replace(/%/g, "%25")
+          .replace(/\r/g, "%0D")
+          .replace(/\n/g, "%0A")
+          .replace(/:/g, "%3A")
+          .replace(/,/g, "%2C");
+      }
+      //# sourceMappingURL=command.js.map
 
       /***/
     },
 
-    /***/ 33: /***/ function(__unusedmodule, exports, __webpack_require__) {
+    /***/ 186: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
       "use strict";
 
       var __awaiter =
@@ -100,11 +149,11 @@ module.exports = /******/ (function(modules, runtime) {
           return result;
         };
       Object.defineProperty(exports, "__esModule", { value: true });
-      const command_1 = __webpack_require__(899);
-      const file_command_1 = __webpack_require__(579);
-      const utils_1 = __webpack_require__(889);
-      const os = __importStar(__webpack_require__(87));
-      const path = __importStar(__webpack_require__(622));
+      const command_1 = __nccwpck_require__(351);
+      const file_command_1 = __nccwpck_require__(717);
+      const utils_1 = __nccwpck_require__(278);
+      const os = __importStar(__nccwpck_require__(87));
+      const path = __importStar(__nccwpck_require__(622));
       /**
        * The code to exit an action
        */
@@ -330,44 +379,1875 @@ module.exports = /******/ (function(modules, runtime) {
       /***/
     },
 
-    /***/ 68: /***/ function(module, __unusedexports, __webpack_require__) {
+    /***/ 717: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
       "use strict";
 
-      var replace = String.prototype.replace;
-      var percentTwenties = /%20/g;
+      // For internal use, subject to change.
+      var __importStar =
+        (this && this.__importStar) ||
+        function(mod) {
+          if (mod && mod.__esModule) return mod;
+          var result = {};
+          if (mod != null)
+            for (var k in mod)
+              if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+          result["default"] = mod;
+          return result;
+        };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      // We use any as a valid input type
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      const fs = __importStar(__nccwpck_require__(747));
+      const os = __importStar(__nccwpck_require__(87));
+      const utils_1 = __nccwpck_require__(278);
+      function issueCommand(command, message) {
+        const filePath = process.env[`GITHUB_${command}`];
+        if (!filePath) {
+          throw new Error(
+            `Unable to find environment variable for file command ${command}`
+          );
+        }
+        if (!fs.existsSync(filePath)) {
+          throw new Error(`Missing file at path: ${filePath}`);
+        }
+        fs.appendFileSync(
+          filePath,
+          `${utils_1.toCommandValue(message)}${os.EOL}`,
+          {
+            encoding: "utf8"
+          }
+        );
+      }
+      exports.issueCommand = issueCommand;
+      //# sourceMappingURL=file-command.js.map
 
-      var util = __webpack_require__(498);
+      /***/
+    },
 
-      var Format = {
-        RFC1738: "RFC1738",
-        RFC3986: "RFC3986"
-      };
+    /***/ 278: /***/ (__unused_webpack_module, exports) => {
+      "use strict";
 
-      module.exports = util.assign(
-        {
-          default: Format.RFC3986,
-          formatters: {
-            RFC1738: function(value) {
-              return replace.call(value, percentTwenties, "+");
-            },
-            RFC3986: function(value) {
-              return String(value);
+      // We use any as a valid input type
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      Object.defineProperty(exports, "__esModule", { value: true });
+      /**
+       * Sanitizes an input into a string so it can be passed into issueCommand safely
+       * @param input input to sanitize into a string
+       */
+      function toCommandValue(input) {
+        if (input === null || input === undefined) {
+          return "";
+        } else if (typeof input === "string" || input instanceof String) {
+          return input;
+        }
+        return JSON.stringify(input);
+      }
+      exports.toCommandValue = toCommandValue;
+      //# sourceMappingURL=utils.js.map
+
+      /***/
+    },
+
+    /***/ 514: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
+      "use strict";
+
+      var __awaiter =
+        (this && this.__awaiter) ||
+        function(thisArg, _arguments, P, generator) {
+          function adopt(value) {
+            return value instanceof P
+              ? value
+              : new P(function(resolve) {
+                  resolve(value);
+                });
+          }
+          return new (P || (P = Promise))(function(resolve, reject) {
+            function fulfilled(value) {
+              try {
+                step(generator.next(value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function rejected(value) {
+              try {
+                step(generator["throw"](value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function step(result) {
+              result.done
+                ? resolve(result.value)
+                : adopt(result.value).then(fulfilled, rejected);
+            }
+            step(
+              (generator = generator.apply(thisArg, _arguments || [])).next()
+            );
+          });
+        };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const tr = __nccwpck_require__(159);
+      /**
+       * Exec a command.
+       * Output will be streamed to the live console.
+       * Returns promise with return code
+       *
+       * @param     commandLine        command to execute (can include additional args). Must be correctly escaped.
+       * @param     args               optional arguments for tool. Escaping is handled by the lib.
+       * @param     options            optional exec options.  See ExecOptions
+       * @returns   Promise<number>    exit code
+       */
+      function exec(commandLine, args, options) {
+        return __awaiter(this, void 0, void 0, function*() {
+          const commandArgs = tr.argStringToArray(commandLine);
+          if (commandArgs.length === 0) {
+            throw new Error(`Parameter 'commandLine' cannot be null or empty.`);
+          }
+          // Path to tool to execute should be first arg
+          const toolPath = commandArgs[0];
+          args = commandArgs.slice(1).concat(args || []);
+          const runner = new tr.ToolRunner(toolPath, args, options);
+          return runner.exec();
+        });
+      }
+      exports.exec = exec;
+      //# sourceMappingURL=exec.js.map
+
+      /***/
+    },
+
+    /***/ 159: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
+      "use strict";
+
+      var __awaiter =
+        (this && this.__awaiter) ||
+        function(thisArg, _arguments, P, generator) {
+          function adopt(value) {
+            return value instanceof P
+              ? value
+              : new P(function(resolve) {
+                  resolve(value);
+                });
+          }
+          return new (P || (P = Promise))(function(resolve, reject) {
+            function fulfilled(value) {
+              try {
+                step(generator.next(value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function rejected(value) {
+              try {
+                step(generator["throw"](value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function step(result) {
+              result.done
+                ? resolve(result.value)
+                : adopt(result.value).then(fulfilled, rejected);
+            }
+            step(
+              (generator = generator.apply(thisArg, _arguments || [])).next()
+            );
+          });
+        };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const os = __nccwpck_require__(87);
+      const events = __nccwpck_require__(614);
+      const child = __nccwpck_require__(129);
+      const path = __nccwpck_require__(622);
+      const io = __nccwpck_require__(436);
+      const ioUtil = __nccwpck_require__(962);
+      /* eslint-disable @typescript-eslint/unbound-method */
+      const IS_WINDOWS = process.platform === "win32";
+      /*
+       * Class for running command line tools. Handles quoting and arg parsing in a platform agnostic way.
+       */
+      class ToolRunner extends events.EventEmitter {
+        constructor(toolPath, args, options) {
+          super();
+          if (!toolPath) {
+            throw new Error("Parameter 'toolPath' cannot be null or empty.");
+          }
+          this.toolPath = toolPath;
+          this.args = args || [];
+          this.options = options || {};
+        }
+        _debug(message) {
+          if (this.options.listeners && this.options.listeners.debug) {
+            this.options.listeners.debug(message);
+          }
+        }
+        _getCommandString(options, noPrefix) {
+          const toolPath = this._getSpawnFileName();
+          const args = this._getSpawnArgs(options);
+          let cmd = noPrefix ? "" : "[command]"; // omit prefix when piped to a second tool
+          if (IS_WINDOWS) {
+            // Windows + cmd file
+            if (this._isCmdFile()) {
+              cmd += toolPath;
+              for (const a of args) {
+                cmd += ` ${a}`;
+              }
+            }
+            // Windows + verbatim
+            else if (options.windowsVerbatimArguments) {
+              cmd += `"${toolPath}"`;
+              for (const a of args) {
+                cmd += ` ${a}`;
+              }
+            }
+            // Windows (regular)
+            else {
+              cmd += this._windowsQuoteCmdArg(toolPath);
+              for (const a of args) {
+                cmd += ` ${this._windowsQuoteCmdArg(a)}`;
+              }
+            }
+          } else {
+            // OSX/Linux - this can likely be improved with some form of quoting.
+            // creating processes on Unix is fundamentally different than Windows.
+            // on Unix, execvp() takes an arg array.
+            cmd += toolPath;
+            for (const a of args) {
+              cmd += ` ${a}`;
             }
           }
-        },
-        Format
-      );
+          return cmd;
+        }
+        _processLineBuffer(data, strBuffer, onLine) {
+          try {
+            let s = strBuffer + data.toString();
+            let n = s.indexOf(os.EOL);
+            while (n > -1) {
+              const line = s.substring(0, n);
+              onLine(line);
+              // the rest of the string ...
+              s = s.substring(n + os.EOL.length);
+              n = s.indexOf(os.EOL);
+            }
+            strBuffer = s;
+          } catch (err) {
+            // streaming lines to console is best effort.  Don't fail a build.
+            this._debug(`error processing line. Failed with error ${err}`);
+          }
+        }
+        _getSpawnFileName() {
+          if (IS_WINDOWS) {
+            if (this._isCmdFile()) {
+              return process.env["COMSPEC"] || "cmd.exe";
+            }
+          }
+          return this.toolPath;
+        }
+        _getSpawnArgs(options) {
+          if (IS_WINDOWS) {
+            if (this._isCmdFile()) {
+              let argline = `/D /S /C "${this._windowsQuoteCmdArg(
+                this.toolPath
+              )}`;
+              for (const a of this.args) {
+                argline += " ";
+                argline += options.windowsVerbatimArguments
+                  ? a
+                  : this._windowsQuoteCmdArg(a);
+              }
+              argline += '"';
+              return [argline];
+            }
+          }
+          return this.args;
+        }
+        _endsWith(str, end) {
+          return str.endsWith(end);
+        }
+        _isCmdFile() {
+          const upperToolPath = this.toolPath.toUpperCase();
+          return (
+            this._endsWith(upperToolPath, ".CMD") ||
+            this._endsWith(upperToolPath, ".BAT")
+          );
+        }
+        _windowsQuoteCmdArg(arg) {
+          // for .exe, apply the normal quoting rules that libuv applies
+          if (!this._isCmdFile()) {
+            return this._uvQuoteCmdArg(arg);
+          }
+          // otherwise apply quoting rules specific to the cmd.exe command line parser.
+          // the libuv rules are generic and are not designed specifically for cmd.exe
+          // command line parser.
+          //
+          // for a detailed description of the cmd.exe command line parser, refer to
+          // http://stackoverflow.com/questions/4094699/how-does-the-windows-command-interpreter-cmd-exe-parse-scripts/7970912#7970912
+          // need quotes for empty arg
+          if (!arg) {
+            return '""';
+          }
+          // determine whether the arg needs to be quoted
+          const cmdSpecialChars = [
+            " ",
+            "\t",
+            "&",
+            "(",
+            ")",
+            "[",
+            "]",
+            "{",
+            "}",
+            "^",
+            "=",
+            ";",
+            "!",
+            "'",
+            "+",
+            ",",
+            "`",
+            "~",
+            "|",
+            "<",
+            ">",
+            '"'
+          ];
+          let needsQuotes = false;
+          for (const char of arg) {
+            if (cmdSpecialChars.some(x => x === char)) {
+              needsQuotes = true;
+              break;
+            }
+          }
+          // short-circuit if quotes not needed
+          if (!needsQuotes) {
+            return arg;
+          }
+          // the following quoting rules are very similar to the rules that by libuv applies.
+          //
+          // 1) wrap the string in quotes
+          //
+          // 2) double-up quotes - i.e. " => ""
+          //
+          //    this is different from the libuv quoting rules. libuv replaces " with \", which unfortunately
+          //    doesn't work well with a cmd.exe command line.
+          //
+          //    note, replacing " with "" also works well if the arg is passed to a downstream .NET console app.
+          //    for example, the command line:
+          //          foo.exe "myarg:""my val"""
+          //    is parsed by a .NET console app into an arg array:
+          //          [ "myarg:\"my val\"" ]
+          //    which is the same end result when applying libuv quoting rules. although the actual
+          //    command line from libuv quoting rules would look like:
+          //          foo.exe "myarg:\"my val\""
+          //
+          // 3) double-up slashes that precede a quote,
+          //    e.g.  hello \world    => "hello \world"
+          //          hello\"world    => "hello\\""world"
+          //          hello\\"world   => "hello\\\\""world"
+          //          hello world\    => "hello world\\"
+          //
+          //    technically this is not required for a cmd.exe command line, or the batch argument parser.
+          //    the reasons for including this as a .cmd quoting rule are:
+          //
+          //    a) this is optimized for the scenario where the argument is passed from the .cmd file to an
+          //       external program. many programs (e.g. .NET console apps) rely on the slash-doubling rule.
+          //
+          //    b) it's what we've been doing previously (by deferring to node default behavior) and we
+          //       haven't heard any complaints about that aspect.
+          //
+          // note, a weakness of the quoting rules chosen here, is that % is not escaped. in fact, % cannot be
+          // escaped when used on the command line directly - even though within a .cmd file % can be escaped
+          // by using %%.
+          //
+          // the saving grace is, on the command line, %var% is left as-is if var is not defined. this contrasts
+          // the line parsing rules within a .cmd file, where if var is not defined it is replaced with nothing.
+          //
+          // one option that was explored was replacing % with ^% - i.e. %var% => ^%var^%. this hack would
+          // often work, since it is unlikely that var^ would exist, and the ^ character is removed when the
+          // variable is used. the problem, however, is that ^ is not removed when %* is used to pass the args
+          // to an external program.
+          //
+          // an unexplored potential solution for the % escaping problem, is to create a wrapper .cmd file.
+          // % can be escaped within a .cmd file.
+          let reverse = '"';
+          let quoteHit = true;
+          for (let i = arg.length; i > 0; i--) {
+            // walk the string in reverse
+            reverse += arg[i - 1];
+            if (quoteHit && arg[i - 1] === "\\") {
+              reverse += "\\"; // double the slash
+            } else if (arg[i - 1] === '"') {
+              quoteHit = true;
+              reverse += '"'; // double the quote
+            } else {
+              quoteHit = false;
+            }
+          }
+          reverse += '"';
+          return reverse
+            .split("")
+            .reverse()
+            .join("");
+        }
+        _uvQuoteCmdArg(arg) {
+          // Tool runner wraps child_process.spawn() and needs to apply the same quoting as
+          // Node in certain cases where the undocumented spawn option windowsVerbatimArguments
+          // is used.
+          //
+          // Since this function is a port of quote_cmd_arg from Node 4.x (technically, lib UV,
+          // see https://github.com/nodejs/node/blob/v4.x/deps/uv/src/win/process.c for details),
+          // pasting copyright notice from Node within this function:
+          //
+          //      Copyright Joyent, Inc. and other Node contributors. All rights reserved.
+          //
+          //      Permission is hereby granted, free of charge, to any person obtaining a copy
+          //      of this software and associated documentation files (the "Software"), to
+          //      deal in the Software without restriction, including without limitation the
+          //      rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+          //      sell copies of the Software, and to permit persons to whom the Software is
+          //      furnished to do so, subject to the following conditions:
+          //
+          //      The above copyright notice and this permission notice shall be included in
+          //      all copies or substantial portions of the Software.
+          //
+          //      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+          //      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+          //      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+          //      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+          //      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+          //      FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+          //      IN THE SOFTWARE.
+          if (!arg) {
+            // Need double quotation for empty argument
+            return '""';
+          }
+          if (!arg.includes(" ") && !arg.includes("\t") && !arg.includes('"')) {
+            // No quotation needed
+            return arg;
+          }
+          if (!arg.includes('"') && !arg.includes("\\")) {
+            // No embedded double quotes or backslashes, so I can just wrap
+            // quote marks around the whole thing.
+            return `"${arg}"`;
+          }
+          // Expected input/output:
+          //   input : hello"world
+          //   output: "hello\"world"
+          //   input : hello""world
+          //   output: "hello\"\"world"
+          //   input : hello\world
+          //   output: hello\world
+          //   input : hello\\world
+          //   output: hello\\world
+          //   input : hello\"world
+          //   output: "hello\\\"world"
+          //   input : hello\\"world
+          //   output: "hello\\\\\"world"
+          //   input : hello world\
+          //   output: "hello world\\" - note the comment in libuv actually reads "hello world\"
+          //                             but it appears the comment is wrong, it should be "hello world\\"
+          let reverse = '"';
+          let quoteHit = true;
+          for (let i = arg.length; i > 0; i--) {
+            // walk the string in reverse
+            reverse += arg[i - 1];
+            if (quoteHit && arg[i - 1] === "\\") {
+              reverse += "\\";
+            } else if (arg[i - 1] === '"') {
+              quoteHit = true;
+              reverse += "\\";
+            } else {
+              quoteHit = false;
+            }
+          }
+          reverse += '"';
+          return reverse
+            .split("")
+            .reverse()
+            .join("");
+        }
+        _cloneExecOptions(options) {
+          options = options || {};
+          const result = {
+            cwd: options.cwd || process.cwd(),
+            env: options.env || process.env,
+            silent: options.silent || false,
+            windowsVerbatimArguments: options.windowsVerbatimArguments || false,
+            failOnStdErr: options.failOnStdErr || false,
+            ignoreReturnCode: options.ignoreReturnCode || false,
+            delay: options.delay || 10000
+          };
+          result.outStream = options.outStream || process.stdout;
+          result.errStream = options.errStream || process.stderr;
+          return result;
+        }
+        _getSpawnOptions(options, toolPath) {
+          options = options || {};
+          const result = {};
+          result.cwd = options.cwd;
+          result.env = options.env;
+          result["windowsVerbatimArguments"] =
+            options.windowsVerbatimArguments || this._isCmdFile();
+          if (options.windowsVerbatimArguments) {
+            result.argv0 = `"${toolPath}"`;
+          }
+          return result;
+        }
+        /**
+         * Exec a tool.
+         * Output will be streamed to the live console.
+         * Returns promise with return code
+         *
+         * @param     tool     path to tool to exec
+         * @param     options  optional exec options.  See ExecOptions
+         * @returns   number
+         */
+        exec() {
+          return __awaiter(this, void 0, void 0, function*() {
+            // root the tool path if it is unrooted and contains relative pathing
+            if (
+              !ioUtil.isRooted(this.toolPath) &&
+              (this.toolPath.includes("/") ||
+                (IS_WINDOWS && this.toolPath.includes("\\")))
+            ) {
+              // prefer options.cwd if it is specified, however options.cwd may also need to be rooted
+              this.toolPath = path.resolve(
+                process.cwd(),
+                this.options.cwd || process.cwd(),
+                this.toolPath
+              );
+            }
+            // if the tool is only a file name, then resolve it from the PATH
+            // otherwise verify it exists (add extension on Windows if necessary)
+            this.toolPath = yield io.which(this.toolPath, true);
+            return new Promise((resolve, reject) => {
+              this._debug(`exec tool: ${this.toolPath}`);
+              this._debug("arguments:");
+              for (const arg of this.args) {
+                this._debug(`   ${arg}`);
+              }
+              const optionsNonNull = this._cloneExecOptions(this.options);
+              if (!optionsNonNull.silent && optionsNonNull.outStream) {
+                optionsNonNull.outStream.write(
+                  this._getCommandString(optionsNonNull) + os.EOL
+                );
+              }
+              const state = new ExecState(optionsNonNull, this.toolPath);
+              state.on("debug", message => {
+                this._debug(message);
+              });
+              const fileName = this._getSpawnFileName();
+              const cp = child.spawn(
+                fileName,
+                this._getSpawnArgs(optionsNonNull),
+                this._getSpawnOptions(this.options, fileName)
+              );
+              const stdbuffer = "";
+              if (cp.stdout) {
+                cp.stdout.on("data", data => {
+                  if (this.options.listeners && this.options.listeners.stdout) {
+                    this.options.listeners.stdout(data);
+                  }
+                  if (!optionsNonNull.silent && optionsNonNull.outStream) {
+                    optionsNonNull.outStream.write(data);
+                  }
+                  this._processLineBuffer(data, stdbuffer, line => {
+                    if (
+                      this.options.listeners &&
+                      this.options.listeners.stdline
+                    ) {
+                      this.options.listeners.stdline(line);
+                    }
+                  });
+                });
+              }
+              const errbuffer = "";
+              if (cp.stderr) {
+                cp.stderr.on("data", data => {
+                  state.processStderr = true;
+                  if (this.options.listeners && this.options.listeners.stderr) {
+                    this.options.listeners.stderr(data);
+                  }
+                  if (
+                    !optionsNonNull.silent &&
+                    optionsNonNull.errStream &&
+                    optionsNonNull.outStream
+                  ) {
+                    const s = optionsNonNull.failOnStdErr
+                      ? optionsNonNull.errStream
+                      : optionsNonNull.outStream;
+                    s.write(data);
+                  }
+                  this._processLineBuffer(data, errbuffer, line => {
+                    if (
+                      this.options.listeners &&
+                      this.options.listeners.errline
+                    ) {
+                      this.options.listeners.errline(line);
+                    }
+                  });
+                });
+              }
+              cp.on("error", err => {
+                state.processError = err.message;
+                state.processExited = true;
+                state.processClosed = true;
+                state.CheckComplete();
+              });
+              cp.on("exit", code => {
+                state.processExitCode = code;
+                state.processExited = true;
+                this._debug(
+                  `Exit code ${code} received from tool '${this.toolPath}'`
+                );
+                state.CheckComplete();
+              });
+              cp.on("close", code => {
+                state.processExitCode = code;
+                state.processExited = true;
+                state.processClosed = true;
+                this._debug(
+                  `STDIO streams have closed for tool '${this.toolPath}'`
+                );
+                state.CheckComplete();
+              });
+              state.on("done", (error, exitCode) => {
+                if (stdbuffer.length > 0) {
+                  this.emit("stdline", stdbuffer);
+                }
+                if (errbuffer.length > 0) {
+                  this.emit("errline", errbuffer);
+                }
+                cp.removeAllListeners();
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(exitCode);
+                }
+              });
+            });
+          });
+        }
+      }
+      exports.ToolRunner = ToolRunner;
+      /**
+       * Convert an arg string to an array of args. Handles escaping
+       *
+       * @param    argString   string of arguments
+       * @returns  string[]    array of arguments
+       */
+      function argStringToArray(argString) {
+        const args = [];
+        let inQuotes = false;
+        let escaped = false;
+        let arg = "";
+        function append(c) {
+          // we only escape double quotes.
+          if (escaped && c !== '"') {
+            arg += "\\";
+          }
+          arg += c;
+          escaped = false;
+        }
+        for (let i = 0; i < argString.length; i++) {
+          const c = argString.charAt(i);
+          if (c === '"') {
+            if (!escaped) {
+              inQuotes = !inQuotes;
+            } else {
+              append(c);
+            }
+            continue;
+          }
+          if (c === "\\" && escaped) {
+            append(c);
+            continue;
+          }
+          if (c === "\\" && inQuotes) {
+            escaped = true;
+            continue;
+          }
+          if (c === " " && !inQuotes) {
+            if (arg.length > 0) {
+              args.push(arg);
+              arg = "";
+            }
+            continue;
+          }
+          append(c);
+        }
+        if (arg.length > 0) {
+          args.push(arg.trim());
+        }
+        return args;
+      }
+      exports.argStringToArray = argStringToArray;
+      class ExecState extends events.EventEmitter {
+        constructor(options, toolPath) {
+          super();
+          this.processClosed = false; // tracks whether the process has exited and stdio is closed
+          this.processError = "";
+          this.processExitCode = 0;
+          this.processExited = false; // tracks whether the process has exited
+          this.processStderr = false; // tracks whether stderr was written to
+          this.delay = 10000; // 10 seconds
+          this.done = false;
+          this.timeout = null;
+          if (!toolPath) {
+            throw new Error("toolPath must not be empty");
+          }
+          this.options = options;
+          this.toolPath = toolPath;
+          if (options.delay) {
+            this.delay = options.delay;
+          }
+        }
+        CheckComplete() {
+          if (this.done) {
+            return;
+          }
+          if (this.processClosed) {
+            this._setResult();
+          } else if (this.processExited) {
+            this.timeout = setTimeout(
+              ExecState.HandleTimeout,
+              this.delay,
+              this
+            );
+          }
+        }
+        _debug(message) {
+          this.emit("debug", message);
+        }
+        _setResult() {
+          // determine whether there is an error
+          let error;
+          if (this.processExited) {
+            if (this.processError) {
+              error = new Error(
+                `There was an error when attempting to execute the process '${this.toolPath}'. This may indicate the process failed to start. Error: ${this.processError}`
+              );
+            } else if (
+              this.processExitCode !== 0 &&
+              !this.options.ignoreReturnCode
+            ) {
+              error = new Error(
+                `The process '${this.toolPath}' failed with exit code ${this.processExitCode}`
+              );
+            } else if (this.processStderr && this.options.failOnStdErr) {
+              error = new Error(
+                `The process '${this.toolPath}' failed because one or more lines were written to the STDERR stream`
+              );
+            }
+          }
+          // clear the timeout
+          if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = null;
+          }
+          this.done = true;
+          this.emit("done", error, this.processExitCode);
+        }
+        static HandleTimeout(state) {
+          if (state.done) {
+            return;
+          }
+          if (!state.processClosed && state.processExited) {
+            const message = `The STDIO streams did not close within ${state.delay /
+              1000} seconds of the exit event from process '${
+              state.toolPath
+            }'. This may indicate a child process inherited the STDIO streams and has not yet exited.`;
+            state._debug(message);
+          }
+          state._setResult();
+        }
+      }
+      //# sourceMappingURL=toolrunner.js.map
 
       /***/
     },
 
-    /***/ 87: /***/ function(module) {
-      module.exports = require("os");
+    /***/ 962: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
+      "use strict";
+
+      var __awaiter =
+        (this && this.__awaiter) ||
+        function(thisArg, _arguments, P, generator) {
+          function adopt(value) {
+            return value instanceof P
+              ? value
+              : new P(function(resolve) {
+                  resolve(value);
+                });
+          }
+          return new (P || (P = Promise))(function(resolve, reject) {
+            function fulfilled(value) {
+              try {
+                step(generator.next(value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function rejected(value) {
+              try {
+                step(generator["throw"](value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function step(result) {
+              result.done
+                ? resolve(result.value)
+                : adopt(result.value).then(fulfilled, rejected);
+            }
+            step(
+              (generator = generator.apply(thisArg, _arguments || [])).next()
+            );
+          });
+        };
+      var _a;
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const assert_1 = __nccwpck_require__(357);
+      const fs = __nccwpck_require__(747);
+      const path = __nccwpck_require__(622);
+      (_a = fs.promises),
+        (exports.chmod = _a.chmod),
+        (exports.copyFile = _a.copyFile),
+        (exports.lstat = _a.lstat),
+        (exports.mkdir = _a.mkdir),
+        (exports.readdir = _a.readdir),
+        (exports.readlink = _a.readlink),
+        (exports.rename = _a.rename),
+        (exports.rmdir = _a.rmdir),
+        (exports.stat = _a.stat),
+        (exports.symlink = _a.symlink),
+        (exports.unlink = _a.unlink);
+      exports.IS_WINDOWS = process.platform === "win32";
+      function exists(fsPath) {
+        return __awaiter(this, void 0, void 0, function*() {
+          try {
+            yield exports.stat(fsPath);
+          } catch (err) {
+            if (err.code === "ENOENT") {
+              return false;
+            }
+            throw err;
+          }
+          return true;
+        });
+      }
+      exports.exists = exists;
+      function isDirectory(fsPath, useStat = false) {
+        return __awaiter(this, void 0, void 0, function*() {
+          const stats = useStat
+            ? yield exports.stat(fsPath)
+            : yield exports.lstat(fsPath);
+          return stats.isDirectory();
+        });
+      }
+      exports.isDirectory = isDirectory;
+      /**
+       * On OSX/Linux, true if path starts with '/'. On Windows, true for paths like:
+       * \, \hello, \\hello\share, C:, and C:\hello (and corresponding alternate separator cases).
+       */
+      function isRooted(p) {
+        p = normalizeSeparators(p);
+        if (!p) {
+          throw new Error('isRooted() parameter "p" cannot be empty');
+        }
+        if (exports.IS_WINDOWS) {
+          return (
+            p.startsWith("\\") || /^[A-Z]:/i.test(p) // e.g. \ or \hello or \\hello
+          ); // e.g. C: or C:\hello
+        }
+        return p.startsWith("/");
+      }
+      exports.isRooted = isRooted;
+      /**
+       * Recursively create a directory at `fsPath`.
+       *
+       * This implementation is optimistic, meaning it attempts to create the full
+       * path first, and backs up the path stack from there.
+       *
+       * @param fsPath The path to create
+       * @param maxDepth The maximum recursion depth
+       * @param depth The current recursion depth
+       */
+      function mkdirP(fsPath, maxDepth = 1000, depth = 1) {
+        return __awaiter(this, void 0, void 0, function*() {
+          assert_1.ok(fsPath, "a path argument must be provided");
+          fsPath = path.resolve(fsPath);
+          if (depth >= maxDepth) return exports.mkdir(fsPath);
+          try {
+            yield exports.mkdir(fsPath);
+            return;
+          } catch (err) {
+            switch (err.code) {
+              case "ENOENT": {
+                yield mkdirP(path.dirname(fsPath), maxDepth, depth + 1);
+                yield exports.mkdir(fsPath);
+                return;
+              }
+              default: {
+                let stats;
+                try {
+                  stats = yield exports.stat(fsPath);
+                } catch (err2) {
+                  throw err;
+                }
+                if (!stats.isDirectory()) throw err;
+              }
+            }
+          }
+        });
+      }
+      exports.mkdirP = mkdirP;
+      /**
+       * Best effort attempt to determine whether a file exists and is executable.
+       * @param filePath    file path to check
+       * @param extensions  additional file extensions to try
+       * @return if file exists and is executable, returns the file path. otherwise empty string.
+       */
+      function tryGetExecutablePath(filePath, extensions) {
+        return __awaiter(this, void 0, void 0, function*() {
+          let stats = undefined;
+          try {
+            // test file exists
+            stats = yield exports.stat(filePath);
+          } catch (err) {
+            if (err.code !== "ENOENT") {
+              // eslint-disable-next-line no-console
+              console.log(
+                `Unexpected error attempting to determine if executable file exists '${filePath}': ${err}`
+              );
+            }
+          }
+          if (stats && stats.isFile()) {
+            if (exports.IS_WINDOWS) {
+              // on Windows, test for valid extension
+              const upperExt = path.extname(filePath).toUpperCase();
+              if (
+                extensions.some(validExt => validExt.toUpperCase() === upperExt)
+              ) {
+                return filePath;
+              }
+            } else {
+              if (isUnixExecutable(stats)) {
+                return filePath;
+              }
+            }
+          }
+          // try each extension
+          const originalFilePath = filePath;
+          for (const extension of extensions) {
+            filePath = originalFilePath + extension;
+            stats = undefined;
+            try {
+              stats = yield exports.stat(filePath);
+            } catch (err) {
+              if (err.code !== "ENOENT") {
+                // eslint-disable-next-line no-console
+                console.log(
+                  `Unexpected error attempting to determine if executable file exists '${filePath}': ${err}`
+                );
+              }
+            }
+            if (stats && stats.isFile()) {
+              if (exports.IS_WINDOWS) {
+                // preserve the case of the actual file (since an extension was appended)
+                try {
+                  const directory = path.dirname(filePath);
+                  const upperName = path.basename(filePath).toUpperCase();
+                  for (const actualName of yield exports.readdir(directory)) {
+                    if (upperName === actualName.toUpperCase()) {
+                      filePath = path.join(directory, actualName);
+                      break;
+                    }
+                  }
+                } catch (err) {
+                  // eslint-disable-next-line no-console
+                  console.log(
+                    `Unexpected error attempting to determine the actual case of the file '${filePath}': ${err}`
+                  );
+                }
+                return filePath;
+              } else {
+                if (isUnixExecutable(stats)) {
+                  return filePath;
+                }
+              }
+            }
+          }
+          return "";
+        });
+      }
+      exports.tryGetExecutablePath = tryGetExecutablePath;
+      function normalizeSeparators(p) {
+        p = p || "";
+        if (exports.IS_WINDOWS) {
+          // convert slashes on Windows
+          p = p.replace(/\//g, "\\");
+          // remove redundant slashes
+          return p.replace(/\\\\+/g, "\\");
+        }
+        // remove redundant slashes
+        return p.replace(/\/\/+/g, "/");
+      }
+      // on Mac/Linux, test the execute bit
+      //     R   W  X  R  W X R W X
+      //   256 128 64 32 16 8 4 2 1
+      function isUnixExecutable(stats) {
+        return (
+          (stats.mode & 1) > 0 ||
+          ((stats.mode & 8) > 0 && stats.gid === process.getgid()) ||
+          ((stats.mode & 64) > 0 && stats.uid === process.getuid())
+        );
+      }
+      //# sourceMappingURL=io-util.js.map
 
       /***/
     },
 
-    /***/ 105: /***/ function(module, exports) {
+    /***/ 436: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
+      "use strict";
+
+      var __awaiter =
+        (this && this.__awaiter) ||
+        function(thisArg, _arguments, P, generator) {
+          function adopt(value) {
+            return value instanceof P
+              ? value
+              : new P(function(resolve) {
+                  resolve(value);
+                });
+          }
+          return new (P || (P = Promise))(function(resolve, reject) {
+            function fulfilled(value) {
+              try {
+                step(generator.next(value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function rejected(value) {
+              try {
+                step(generator["throw"](value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function step(result) {
+              result.done
+                ? resolve(result.value)
+                : adopt(result.value).then(fulfilled, rejected);
+            }
+            step(
+              (generator = generator.apply(thisArg, _arguments || [])).next()
+            );
+          });
+        };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const childProcess = __nccwpck_require__(129);
+      const path = __nccwpck_require__(622);
+      const util_1 = __nccwpck_require__(669);
+      const ioUtil = __nccwpck_require__(962);
+      const exec = util_1.promisify(childProcess.exec);
+      /**
+       * Copies a file or folder.
+       * Based off of shelljs - https://github.com/shelljs/shelljs/blob/9237f66c52e5daa40458f94f9565e18e8132f5a6/src/cp.js
+       *
+       * @param     source    source path
+       * @param     dest      destination path
+       * @param     options   optional. See CopyOptions.
+       */
+      function cp(source, dest, options = {}) {
+        return __awaiter(this, void 0, void 0, function*() {
+          const { force, recursive } = readCopyOptions(options);
+          const destStat = (yield ioUtil.exists(dest))
+            ? yield ioUtil.stat(dest)
+            : null;
+          // Dest is an existing file, but not forcing
+          if (destStat && destStat.isFile() && !force) {
+            return;
+          }
+          // If dest is an existing directory, should copy inside.
+          const newDest =
+            destStat && destStat.isDirectory()
+              ? path.join(dest, path.basename(source))
+              : dest;
+          if (!(yield ioUtil.exists(source))) {
+            throw new Error(`no such file or directory: ${source}`);
+          }
+          const sourceStat = yield ioUtil.stat(source);
+          if (sourceStat.isDirectory()) {
+            if (!recursive) {
+              throw new Error(
+                `Failed to copy. ${source} is a directory, but tried to copy without recursive flag.`
+              );
+            } else {
+              yield cpDirRecursive(source, newDest, 0, force);
+            }
+          } else {
+            if (path.relative(source, newDest) === "") {
+              // a file cannot be copied to itself
+              throw new Error(`'${newDest}' and '${source}' are the same file`);
+            }
+            yield copyFile(source, newDest, force);
+          }
+        });
+      }
+      exports.cp = cp;
+      /**
+       * Moves a path.
+       *
+       * @param     source    source path
+       * @param     dest      destination path
+       * @param     options   optional. See MoveOptions.
+       */
+      function mv(source, dest, options = {}) {
+        return __awaiter(this, void 0, void 0, function*() {
+          if (yield ioUtil.exists(dest)) {
+            let destExists = true;
+            if (yield ioUtil.isDirectory(dest)) {
+              // If dest is directory copy src into dest
+              dest = path.join(dest, path.basename(source));
+              destExists = yield ioUtil.exists(dest);
+            }
+            if (destExists) {
+              if (options.force == null || options.force) {
+                yield rmRF(dest);
+              } else {
+                throw new Error("Destination already exists");
+              }
+            }
+          }
+          yield mkdirP(path.dirname(dest));
+          yield ioUtil.rename(source, dest);
+        });
+      }
+      exports.mv = mv;
+      /**
+       * Remove a path recursively with force
+       *
+       * @param inputPath path to remove
+       */
+      function rmRF(inputPath) {
+        return __awaiter(this, void 0, void 0, function*() {
+          if (ioUtil.IS_WINDOWS) {
+            // Node doesn't provide a delete operation, only an unlink function. This means that if the file is being used by another
+            // program (e.g. antivirus), it won't be deleted. To address this, we shell out the work to rd/del.
+            try {
+              if (yield ioUtil.isDirectory(inputPath, true)) {
+                yield exec(`rd /s /q "${inputPath}"`);
+              } else {
+                yield exec(`del /f /a "${inputPath}"`);
+              }
+            } catch (err) {
+              // if you try to delete a file that doesn't exist, desired result is achieved
+              // other errors are valid
+              if (err.code !== "ENOENT") throw err;
+            }
+            // Shelling out fails to remove a symlink folder with missing source, this unlink catches that
+            try {
+              yield ioUtil.unlink(inputPath);
+            } catch (err) {
+              // if you try to delete a file that doesn't exist, desired result is achieved
+              // other errors are valid
+              if (err.code !== "ENOENT") throw err;
+            }
+          } else {
+            let isDir = false;
+            try {
+              isDir = yield ioUtil.isDirectory(inputPath);
+            } catch (err) {
+              // if you try to delete a file that doesn't exist, desired result is achieved
+              // other errors are valid
+              if (err.code !== "ENOENT") throw err;
+              return;
+            }
+            if (isDir) {
+              yield exec(`rm -rf "${inputPath}"`);
+            } else {
+              yield ioUtil.unlink(inputPath);
+            }
+          }
+        });
+      }
+      exports.rmRF = rmRF;
+      /**
+       * Make a directory.  Creates the full path with folders in between
+       * Will throw if it fails
+       *
+       * @param   fsPath        path to create
+       * @returns Promise<void>
+       */
+      function mkdirP(fsPath) {
+        return __awaiter(this, void 0, void 0, function*() {
+          yield ioUtil.mkdirP(fsPath);
+        });
+      }
+      exports.mkdirP = mkdirP;
+      /**
+       * Returns path of a tool had the tool actually been invoked.  Resolves via paths.
+       * If you check and the tool does not exist, it will throw.
+       *
+       * @param     tool              name of the tool
+       * @param     check             whether to check if tool exists
+       * @returns   Promise<string>   path to tool
+       */
+      function which(tool, check) {
+        return __awaiter(this, void 0, void 0, function*() {
+          if (!tool) {
+            throw new Error("parameter 'tool' is required");
+          }
+          // recursive when check=true
+          if (check) {
+            const result = yield which(tool, false);
+            if (!result) {
+              if (ioUtil.IS_WINDOWS) {
+                throw new Error(
+                  `Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also verify the file has a valid extension for an executable file.`
+                );
+              } else {
+                throw new Error(
+                  `Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.`
+                );
+              }
+            }
+          }
+          try {
+            // build the list of extensions to try
+            const extensions = [];
+            if (ioUtil.IS_WINDOWS && process.env.PATHEXT) {
+              for (const extension of process.env.PATHEXT.split(
+                path.delimiter
+              )) {
+                if (extension) {
+                  extensions.push(extension);
+                }
+              }
+            }
+            // if it's rooted, return it if exists. otherwise return empty.
+            if (ioUtil.isRooted(tool)) {
+              const filePath = yield ioUtil.tryGetExecutablePath(
+                tool,
+                extensions
+              );
+              if (filePath) {
+                return filePath;
+              }
+              return "";
+            }
+            // if any path separators, return empty
+            if (
+              tool.includes("/") ||
+              (ioUtil.IS_WINDOWS && tool.includes("\\"))
+            ) {
+              return "";
+            }
+            // build the list of directories
+            //
+            // Note, technically "where" checks the current directory on Windows. From a toolkit perspective,
+            // it feels like we should not do this. Checking the current directory seems like more of a use
+            // case of a shell, and the which() function exposed by the toolkit should strive for consistency
+            // across platforms.
+            const directories = [];
+            if (process.env.PATH) {
+              for (const p of process.env.PATH.split(path.delimiter)) {
+                if (p) {
+                  directories.push(p);
+                }
+              }
+            }
+            // return the first match
+            for (const directory of directories) {
+              const filePath = yield ioUtil.tryGetExecutablePath(
+                directory + path.sep + tool,
+                extensions
+              );
+              if (filePath) {
+                return filePath;
+              }
+            }
+            return "";
+          } catch (err) {
+            throw new Error(`which failed with message ${err.message}`);
+          }
+        });
+      }
+      exports.which = which;
+      function readCopyOptions(options) {
+        const force = options.force == null ? true : options.force;
+        const recursive = Boolean(options.recursive);
+        return { force, recursive };
+      }
+      function cpDirRecursive(sourceDir, destDir, currentDepth, force) {
+        return __awaiter(this, void 0, void 0, function*() {
+          // Ensure there is not a run away recursive copy
+          if (currentDepth >= 255) return;
+          currentDepth++;
+          yield mkdirP(destDir);
+          const files = yield ioUtil.readdir(sourceDir);
+          for (const fileName of files) {
+            const srcFile = `${sourceDir}/${fileName}`;
+            const destFile = `${destDir}/${fileName}`;
+            const srcFileStat = yield ioUtil.lstat(srcFile);
+            if (srcFileStat.isDirectory()) {
+              // Recurse
+              yield cpDirRecursive(srcFile, destFile, currentDepth, force);
+            } else {
+              yield copyFile(srcFile, destFile, force);
+            }
+          }
+          // Change the mode for the newly created directory
+          yield ioUtil.chmod(destDir, (yield ioUtil.stat(sourceDir)).mode);
+        });
+      }
+      // Buffered file copy
+      function copyFile(srcFile, destFile, force) {
+        return __awaiter(this, void 0, void 0, function*() {
+          if ((yield ioUtil.lstat(srcFile)).isSymbolicLink()) {
+            // unlink/re-link it
+            try {
+              yield ioUtil.lstat(destFile);
+              yield ioUtil.unlink(destFile);
+            } catch (e) {
+              // Try to override file permission
+              if (e.code === "EPERM") {
+                yield ioUtil.chmod(destFile, "0666");
+                yield ioUtil.unlink(destFile);
+              }
+              // other errors = it doesn't exist, no work to do
+            }
+            // Copy over symlink
+            const symlinkFull = yield ioUtil.readlink(srcFile);
+            yield ioUtil.symlink(
+              symlinkFull,
+              destFile,
+              ioUtil.IS_WINDOWS ? "junction" : null
+            );
+          } else if (!(yield ioUtil.exists(destFile)) || force) {
+            yield ioUtil.copyFile(srcFile, destFile);
+          }
+        });
+      }
+      //# sourceMappingURL=io.js.map
+
+      /***/
+    },
+
+    /***/ 784: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
+      "use strict";
+
+      var __awaiter =
+        (this && this.__awaiter) ||
+        function(thisArg, _arguments, P, generator) {
+          function adopt(value) {
+            return value instanceof P
+              ? value
+              : new P(function(resolve) {
+                  resolve(value);
+                });
+          }
+          return new (P || (P = Promise))(function(resolve, reject) {
+            function fulfilled(value) {
+              try {
+                step(generator.next(value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function rejected(value) {
+              try {
+                step(generator["throw"](value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function step(result) {
+              result.done
+                ? resolve(result.value)
+                : adopt(result.value).then(fulfilled, rejected);
+            }
+            step(
+              (generator = generator.apply(thisArg, _arguments || [])).next()
+            );
+          });
+        };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const core = __nccwpck_require__(186);
+      const io = __nccwpck_require__(436);
+      const fs = __nccwpck_require__(747);
+      const os = __nccwpck_require__(87);
+      const path = __nccwpck_require__(622);
+      const httpm = __nccwpck_require__(538);
+      const semver = __nccwpck_require__(562);
+      const uuidV4 = __nccwpck_require__(824);
+      const exec_1 = __nccwpck_require__(514);
+      const assert_1 = __nccwpck_require__(357);
+      class HTTPError extends Error {
+        constructor(httpStatusCode) {
+          super(`Unexpected HTTP response: ${httpStatusCode}`);
+          this.httpStatusCode = httpStatusCode;
+          Object.setPrototypeOf(this, new.target.prototype);
+        }
+      }
+      exports.HTTPError = HTTPError;
+      const IS_WINDOWS = process.platform === "win32";
+      const userAgent = "actions/tool-cache";
+      // On load grab temp directory and cache directory and remove them from env (currently don't want to expose this)
+      let tempDirectory = process.env["RUNNER_TEMP"] || "";
+      let cacheRoot = process.env["RUNNER_TOOL_CACHE"] || "";
+      // If directories not found, place them in common temp locations
+      if (!tempDirectory || !cacheRoot) {
+        let baseLocation;
+        if (IS_WINDOWS) {
+          // On windows use the USERPROFILE env variable
+          baseLocation = process.env["USERPROFILE"] || "C:\\";
+        } else {
+          if (process.platform === "darwin") {
+            baseLocation = "/Users";
+          } else {
+            baseLocation = "/home";
+          }
+        }
+        if (!tempDirectory) {
+          tempDirectory = path.join(baseLocation, "actions", "temp");
+        }
+        if (!cacheRoot) {
+          cacheRoot = path.join(baseLocation, "actions", "cache");
+        }
+      }
+      /**
+       * Download a tool from an url and stream it into a file
+       *
+       * @param url       url of tool to download
+       * @returns         path to downloaded tool
+       */
+      function downloadTool(url) {
+        return __awaiter(this, void 0, void 0, function*() {
+          // Wrap in a promise so that we can resolve from within stream callbacks
+          return new Promise((resolve, reject) =>
+            __awaiter(this, void 0, void 0, function*() {
+              try {
+                const http = new httpm.HttpClient(userAgent, [], {
+                  allowRetries: true,
+                  maxRetries: 3
+                });
+                const destPath = path.join(tempDirectory, uuidV4());
+                yield io.mkdirP(tempDirectory);
+                core.debug(`Downloading ${url}`);
+                core.debug(`Downloading ${destPath}`);
+                if (fs.existsSync(destPath)) {
+                  throw new Error(
+                    `Destination file path ${destPath} already exists`
+                  );
+                }
+                const response = yield http.get(url);
+                if (response.message.statusCode !== 200) {
+                  const err = new HTTPError(response.message.statusCode);
+                  core.debug(
+                    `Failed to download from "${url}". Code(${response.message.statusCode}) Message(${response.message.statusMessage})`
+                  );
+                  throw err;
+                }
+                const file = fs.createWriteStream(destPath);
+                file.on("open", () =>
+                  __awaiter(this, void 0, void 0, function*() {
+                    try {
+                      const stream = response.message.pipe(file);
+                      stream.on("close", () => {
+                        core.debug("download complete");
+                        resolve(destPath);
+                      });
+                    } catch (err) {
+                      core.debug(
+                        `Failed to download from "${url}". Code(${response.message.statusCode}) Message(${response.message.statusMessage})`
+                      );
+                      reject(err);
+                    }
+                  })
+                );
+                file.on("error", err => {
+                  file.end();
+                  reject(err);
+                });
+              } catch (err) {
+                reject(err);
+              }
+            })
+          );
+        });
+      }
+      exports.downloadTool = downloadTool;
+      /**
+       * Extract a .7z file
+       *
+       * @param file     path to the .7z file
+       * @param dest     destination directory. Optional.
+       * @param _7zPath  path to 7zr.exe. Optional, for long path support. Most .7z archives do not have this
+       * problem. If your .7z archive contains very long paths, you can pass the path to 7zr.exe which will
+       * gracefully handle long paths. By default 7zdec.exe is used because it is a very small program and is
+       * bundled with the tool lib. However it does not support long paths. 7zr.exe is the reduced command line
+       * interface, it is smaller than the full command line interface, and it does support long paths. At the
+       * time of this writing, it is freely available from the LZMA SDK that is available on the 7zip website.
+       * Be sure to check the current license agreement. If 7zr.exe is bundled with your action, then the path
+       * to 7zr.exe can be pass to this function.
+       * @returns        path to the destination directory
+       */
+      function extract7z(file, dest, _7zPath) {
+        return __awaiter(this, void 0, void 0, function*() {
+          assert_1.ok(IS_WINDOWS, "extract7z() not supported on current OS");
+          assert_1.ok(file, 'parameter "file" is required');
+          dest = dest || (yield _createExtractFolder(dest));
+          const originalCwd = process.cwd();
+          process.chdir(dest);
+          if (_7zPath) {
+            try {
+              const args = ["x", "-bb1", "-bd", "-sccUTF-8", file];
+              const options = {
+                silent: true
+              };
+              yield exec_1.exec(`"${_7zPath}"`, args, options);
+            } finally {
+              process.chdir(originalCwd);
+            }
+          } else {
+            const escapedScript = path
+              .join(__dirname, "..", "scripts", "Invoke-7zdec.ps1")
+              .replace(/'/g, "''")
+              .replace(/"|\n|\r/g, ""); // double-up single quotes, remove double quotes and newlines
+            const escapedFile = file
+              .replace(/'/g, "''")
+              .replace(/"|\n|\r/g, "");
+            const escapedTarget = dest
+              .replace(/'/g, "''")
+              .replace(/"|\n|\r/g, "");
+            const command = `& '${escapedScript}' -Source '${escapedFile}' -Target '${escapedTarget}'`;
+            const args = [
+              "-NoLogo",
+              "-Sta",
+              "-NoProfile",
+              "-NonInteractive",
+              "-ExecutionPolicy",
+              "Unrestricted",
+              "-Command",
+              command
+            ];
+            const options = {
+              silent: true
+            };
+            try {
+              const powershellPath = yield io.which("powershell", true);
+              yield exec_1.exec(`"${powershellPath}"`, args, options);
+            } finally {
+              process.chdir(originalCwd);
+            }
+          }
+          return dest;
+        });
+      }
+      exports.extract7z = extract7z;
+      /**
+       * Extract a tar
+       *
+       * @param file     path to the tar
+       * @param dest     destination directory. Optional.
+       * @param flags    flags for the tar. Optional.
+       * @returns        path to the destination directory
+       */
+      function extractTar(file, dest, flags = "xz") {
+        return __awaiter(this, void 0, void 0, function*() {
+          if (!file) {
+            throw new Error("parameter 'file' is required");
+          }
+          dest = dest || (yield _createExtractFolder(dest));
+          const tarPath = yield io.which("tar", true);
+          yield exec_1.exec(`"${tarPath}"`, [flags, "-C", dest, "-f", file]);
+          return dest;
+        });
+      }
+      exports.extractTar = extractTar;
+      /**
+       * Extract a zip
+       *
+       * @param file     path to the zip
+       * @param dest     destination directory. Optional.
+       * @returns        path to the destination directory
+       */
+      function extractZip(file, dest) {
+        return __awaiter(this, void 0, void 0, function*() {
+          if (!file) {
+            throw new Error("parameter 'file' is required");
+          }
+          dest = dest || (yield _createExtractFolder(dest));
+          if (IS_WINDOWS) {
+            yield extractZipWin(file, dest);
+          } else {
+            yield extractZipNix(file, dest);
+          }
+          return dest;
+        });
+      }
+      exports.extractZip = extractZip;
+      function extractZipWin(file, dest) {
+        return __awaiter(this, void 0, void 0, function*() {
+          // build the powershell command
+          const escapedFile = file.replace(/'/g, "''").replace(/"|\n|\r/g, ""); // double-up single quotes, remove double quotes and newlines
+          const escapedDest = dest.replace(/'/g, "''").replace(/"|\n|\r/g, "");
+          const command = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
+          // run powershell
+          const powershellPath = yield io.which("powershell");
+          const args = [
+            "-NoLogo",
+            "-Sta",
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Unrestricted",
+            "-Command",
+            command
+          ];
+          yield exec_1.exec(`"${powershellPath}"`, args);
+        });
+      }
+      function extractZipNix(file, dest) {
+        return __awaiter(this, void 0, void 0, function*() {
+          const unzipPath = yield io.which("unzip");
+          yield exec_1.exec(`"${unzipPath}"`, [file], { cwd: dest });
+        });
+      }
+      /**
+       * Caches a directory and installs it into the tool cacheDir
+       *
+       * @param sourceDir    the directory to cache into tools
+       * @param tool          tool name
+       * @param version       version of the tool.  semver format
+       * @param arch          architecture of the tool.  Optional.  Defaults to machine architecture
+       */
+      function cacheDir(sourceDir, tool, version, arch) {
+        return __awaiter(this, void 0, void 0, function*() {
+          version = semver.clean(version) || version;
+          arch = arch || os.arch();
+          core.debug(`Caching tool ${tool} ${version} ${arch}`);
+          core.debug(`source dir: ${sourceDir}`);
+          if (!fs.statSync(sourceDir).isDirectory()) {
+            throw new Error("sourceDir is not a directory");
+          }
+          // Create the tool dir
+          const destPath = yield _createToolPath(tool, version, arch);
+          // copy each child item. do not move. move can fail on Windows
+          // due to anti-virus software having an open handle on a file.
+          for (const itemName of fs.readdirSync(sourceDir)) {
+            const s = path.join(sourceDir, itemName);
+            yield io.cp(s, destPath, { recursive: true });
+          }
+          // write .complete
+          _completeToolPath(tool, version, arch);
+          return destPath;
+        });
+      }
+      exports.cacheDir = cacheDir;
+      /**
+       * Caches a downloaded file (GUID) and installs it
+       * into the tool cache with a given targetName
+       *
+       * @param sourceFile    the file to cache into tools.  Typically a result of downloadTool which is a guid.
+       * @param targetFile    the name of the file name in the tools directory
+       * @param tool          tool name
+       * @param version       version of the tool.  semver format
+       * @param arch          architecture of the tool.  Optional.  Defaults to machine architecture
+       */
+      function cacheFile(sourceFile, targetFile, tool, version, arch) {
+        return __awaiter(this, void 0, void 0, function*() {
+          version = semver.clean(version) || version;
+          arch = arch || os.arch();
+          core.debug(`Caching tool ${tool} ${version} ${arch}`);
+          core.debug(`source file: ${sourceFile}`);
+          if (!fs.statSync(sourceFile).isFile()) {
+            throw new Error("sourceFile is not a file");
+          }
+          // create the tool dir
+          const destFolder = yield _createToolPath(tool, version, arch);
+          // copy instead of move. move can fail on Windows due to
+          // anti-virus software having an open handle on a file.
+          const destPath = path.join(destFolder, targetFile);
+          core.debug(`destination file ${destPath}`);
+          yield io.cp(sourceFile, destPath);
+          // write .complete
+          _completeToolPath(tool, version, arch);
+          return destFolder;
+        });
+      }
+      exports.cacheFile = cacheFile;
+      /**
+       * Finds the path to a tool version in the local installed tool cache
+       *
+       * @param toolName      name of the tool
+       * @param versionSpec   version of the tool
+       * @param arch          optional arch.  defaults to arch of computer
+       */
+      function find(toolName, versionSpec, arch) {
+        if (!toolName) {
+          throw new Error("toolName parameter is required");
+        }
+        if (!versionSpec) {
+          throw new Error("versionSpec parameter is required");
+        }
+        arch = arch || os.arch();
+        // attempt to resolve an explicit version
+        if (!_isExplicitVersion(versionSpec)) {
+          const localVersions = findAllVersions(toolName, arch);
+          const match = _evaluateVersions(localVersions, versionSpec);
+          versionSpec = match;
+        }
+        // check for the explicit version in the cache
+        let toolPath = "";
+        if (versionSpec) {
+          versionSpec = semver.clean(versionSpec) || "";
+          const cachePath = path.join(cacheRoot, toolName, versionSpec, arch);
+          core.debug(`checking cache: ${cachePath}`);
+          if (
+            fs.existsSync(cachePath) &&
+            fs.existsSync(`${cachePath}.complete`)
+          ) {
+            core.debug(
+              `Found tool in cache ${toolName} ${versionSpec} ${arch}`
+            );
+            toolPath = cachePath;
+          } else {
+            core.debug("not found");
+          }
+        }
+        return toolPath;
+      }
+      exports.find = find;
+      /**
+       * Finds the paths to all versions of a tool that are installed in the local tool cache
+       *
+       * @param toolName  name of the tool
+       * @param arch      optional arch.  defaults to arch of computer
+       */
+      function findAllVersions(toolName, arch) {
+        const versions = [];
+        arch = arch || os.arch();
+        const toolPath = path.join(cacheRoot, toolName);
+        if (fs.existsSync(toolPath)) {
+          const children = fs.readdirSync(toolPath);
+          for (const child of children) {
+            if (_isExplicitVersion(child)) {
+              const fullPath = path.join(toolPath, child, arch || "");
+              if (
+                fs.existsSync(fullPath) &&
+                fs.existsSync(`${fullPath}.complete`)
+              ) {
+                versions.push(child);
+              }
+            }
+          }
+        }
+        return versions;
+      }
+      exports.findAllVersions = findAllVersions;
+      function _createExtractFolder(dest) {
+        return __awaiter(this, void 0, void 0, function*() {
+          if (!dest) {
+            // create a temp dir
+            dest = path.join(tempDirectory, uuidV4());
+          }
+          yield io.mkdirP(dest);
+          return dest;
+        });
+      }
+      function _createToolPath(tool, version, arch) {
+        return __awaiter(this, void 0, void 0, function*() {
+          const folderPath = path.join(
+            cacheRoot,
+            tool,
+            semver.clean(version) || version,
+            arch || ""
+          );
+          core.debug(`destination ${folderPath}`);
+          const markerPath = `${folderPath}.complete`;
+          yield io.rmRF(folderPath);
+          yield io.rmRF(markerPath);
+          yield io.mkdirP(folderPath);
+          return folderPath;
+        });
+      }
+      function _completeToolPath(tool, version, arch) {
+        const folderPath = path.join(
+          cacheRoot,
+          tool,
+          semver.clean(version) || version,
+          arch || ""
+        );
+        const markerPath = `${folderPath}.complete`;
+        fs.writeFileSync(markerPath, "");
+        core.debug("finished caching tool");
+      }
+      function _isExplicitVersion(versionSpec) {
+        const c = semver.clean(versionSpec) || "";
+        core.debug(`isExplicit: ${c}`);
+        const valid = semver.valid(c) != null;
+        core.debug(`explicit? ${valid}`);
+        return valid;
+      }
+      function _evaluateVersions(versions, versionSpec) {
+        let version = "";
+        core.debug(`evaluating ${versions.length} versions`);
+        versions = versions.sort((a, b) => {
+          if (semver.gt(a, b)) {
+            return 1;
+          }
+          return -1;
+        });
+        for (let i = versions.length - 1; i >= 0; i--) {
+          const potential = versions[i];
+          const satisfied = semver.satisfies(potential, versionSpec);
+          if (satisfied) {
+            version = potential;
+            break;
+          }
+        }
+        if (version) {
+          core.debug(`matched: ${version}`);
+        } else {
+          core.debug("match not found");
+        }
+        return version;
+      }
+      //# sourceMappingURL=tool-cache.js.map
+
+      /***/
+    },
+
+    /***/ 562: /***/ (module, exports) => {
       exports = module.exports = SemVer;
 
       var debug;
@@ -2196,41 +4076,1033 @@ module.exports = /******/ (function(modules, runtime) {
       /***/
     },
 
-    /***/ 129: /***/ function(module) {
-      module.exports = require("child_process");
+    /***/ 907: /***/ (
+      module,
+      __unused_webpack_exports,
+      __nccwpck_require__
+    ) => {
+      "use strict";
+
+      var replace = String.prototype.replace;
+      var percentTwenties = /%20/g;
+
+      var util = __nccwpck_require__(360);
+
+      var Format = {
+        RFC1738: "RFC1738",
+        RFC3986: "RFC3986"
+      };
+
+      module.exports = util.assign(
+        {
+          default: Format.RFC3986,
+          formatters: {
+            RFC1738: function(value) {
+              return replace.call(value, percentTwenties, "+");
+            },
+            RFC3986: function(value) {
+              return String(value);
+            }
+          }
+        },
+        Format
+      );
 
       /***/
     },
 
-    /***/ 211: /***/ function(module) {
-      module.exports = require("https");
+    /***/ 760: /***/ (
+      module,
+      __unused_webpack_exports,
+      __nccwpck_require__
+    ) => {
+      "use strict";
 
-      /***/
-    },
+      var stringify = __nccwpck_require__(954);
+      var parse = __nccwpck_require__(912);
+      var formats = __nccwpck_require__(907);
 
-    /***/ 219: /***/ function(module, __unusedexports, __webpack_require__) {
-      // Unique ID creation requires a high quality random # generator.  In node.js
-      // this is pretty straight-forward - we use the crypto API.
-
-      var crypto = __webpack_require__(417);
-
-      module.exports = function nodeRNG() {
-        return crypto.randomBytes(16);
+      module.exports = {
+        formats: formats,
+        parse: parse,
+        stringify: stringify
       };
 
       /***/
     },
 
-    /***/ 232: /***/ function(__unusedmodule, exports, __webpack_require__) {
+    /***/ 912: /***/ (
+      module,
+      __unused_webpack_exports,
+      __nccwpck_require__
+    ) => {
       "use strict";
 
-      var net = __webpack_require__(631);
-      var tls = __webpack_require__(16);
-      var http = __webpack_require__(605);
-      var https = __webpack_require__(211);
-      var events = __webpack_require__(614);
-      var assert = __webpack_require__(357);
-      var util = __webpack_require__(669);
+      var utils = __nccwpck_require__(360);
+
+      var has = Object.prototype.hasOwnProperty;
+      var isArray = Array.isArray;
+
+      var defaults = {
+        allowDots: false,
+        allowPrototypes: false,
+        arrayLimit: 20,
+        charset: "utf-8",
+        charsetSentinel: false,
+        comma: false,
+        decoder: utils.decode,
+        delimiter: "&",
+        depth: 5,
+        ignoreQueryPrefix: false,
+        interpretNumericEntities: false,
+        parameterLimit: 1000,
+        parseArrays: true,
+        plainObjects: false,
+        strictNullHandling: false
+      };
+
+      var interpretNumericEntities = function(str) {
+        return str.replace(/&#(\d+);/g, function($0, numberStr) {
+          return String.fromCharCode(parseInt(numberStr, 10));
+        });
+      };
+
+      // This is what browsers will submit when the ✓ character occurs in an
+      // application/x-www-form-urlencoded body and the encoding of the page containing
+      // the form is iso-8859-1, or when the submitted form has an accept-charset
+      // attribute of iso-8859-1. Presumably also with other charsets that do not contain
+      // the ✓ character, such as us-ascii.
+      var isoSentinel = "utf8=%26%2310003%3B"; // encodeURIComponent('&#10003;')
+
+      // These are the percent-encoded utf-8 octets representing a checkmark, indicating that the request actually is utf-8 encoded.
+      var charsetSentinel = "utf8=%E2%9C%93"; // encodeURIComponent('✓')
+
+      var parseValues = function parseQueryStringValues(str, options) {
+        var obj = {};
+        var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, "") : str;
+        var limit =
+          options.parameterLimit === Infinity
+            ? undefined
+            : options.parameterLimit;
+        var parts = cleanStr.split(options.delimiter, limit);
+        var skipIndex = -1; // Keep track of where the utf8 sentinel was found
+        var i;
+
+        var charset = options.charset;
+        if (options.charsetSentinel) {
+          for (i = 0; i < parts.length; ++i) {
+            if (parts[i].indexOf("utf8=") === 0) {
+              if (parts[i] === charsetSentinel) {
+                charset = "utf-8";
+              } else if (parts[i] === isoSentinel) {
+                charset = "iso-8859-1";
+              }
+              skipIndex = i;
+              i = parts.length; // The eslint settings do not allow break;
+            }
+          }
+        }
+
+        for (i = 0; i < parts.length; ++i) {
+          if (i === skipIndex) {
+            continue;
+          }
+          var part = parts[i];
+
+          var bracketEqualsPos = part.indexOf("]=");
+          var pos =
+            bracketEqualsPos === -1 ? part.indexOf("=") : bracketEqualsPos + 1;
+
+          var key, val;
+          if (pos === -1) {
+            key = options.decoder(part, defaults.decoder, charset, "key");
+            val = options.strictNullHandling ? null : "";
+          } else {
+            key = options.decoder(
+              part.slice(0, pos),
+              defaults.decoder,
+              charset,
+              "key"
+            );
+            val = options.decoder(
+              part.slice(pos + 1),
+              defaults.decoder,
+              charset,
+              "value"
+            );
+          }
+
+          if (
+            val &&
+            options.interpretNumericEntities &&
+            charset === "iso-8859-1"
+          ) {
+            val = interpretNumericEntities(val);
+          }
+
+          if (
+            val &&
+            typeof val === "string" &&
+            options.comma &&
+            val.indexOf(",") > -1
+          ) {
+            val = val.split(",");
+          }
+
+          if (part.indexOf("[]=") > -1) {
+            val = isArray(val) ? [val] : val;
+          }
+
+          if (has.call(obj, key)) {
+            obj[key] = utils.combine(obj[key], val);
+          } else {
+            obj[key] = val;
+          }
+        }
+
+        return obj;
+      };
+
+      var parseObject = function(chain, val, options) {
+        var leaf = val;
+
+        for (var i = chain.length - 1; i >= 0; --i) {
+          var obj;
+          var root = chain[i];
+
+          if (root === "[]" && options.parseArrays) {
+            obj = [].concat(leaf);
+          } else {
+            obj = options.plainObjects ? Object.create(null) : {};
+            var cleanRoot =
+              root.charAt(0) === "[" && root.charAt(root.length - 1) === "]"
+                ? root.slice(1, -1)
+                : root;
+            var index = parseInt(cleanRoot, 10);
+            if (!options.parseArrays && cleanRoot === "") {
+              obj = { 0: leaf };
+            } else if (
+              !isNaN(index) &&
+              root !== cleanRoot &&
+              String(index) === cleanRoot &&
+              index >= 0 &&
+              options.parseArrays && index <= options.arrayLimit
+            ) {
+              obj = [];
+              obj[index] = leaf;
+            } else {
+              obj[cleanRoot] = leaf;
+            }
+          }
+
+          leaf = obj;
+        }
+
+        return leaf;
+      };
+
+      var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
+        if (!givenKey) {
+          return;
+        }
+
+        // Transform dot notation to bracket notation
+        var key = options.allowDots
+          ? givenKey.replace(/\.([^.[]+)/g, "[$1]")
+          : givenKey;
+
+        // The regex chunks
+
+        var brackets = /(\[[^[\]]*])/;
+        var child = /(\[[^[\]]*])/g;
+
+        // Get the parent
+
+        var segment = options.depth > 0 && brackets.exec(key);
+        var parent = segment ? key.slice(0, segment.index) : key;
+
+        // Stash the parent if it exists
+
+        var keys = [];
+        if (parent) {
+          // If we aren't using plain objects, optionally prefix keys that would overwrite object prototype properties
+          if (!options.plainObjects && has.call(Object.prototype, parent)) {
+            if (!options.allowPrototypes) {
+              return;
+            }
+          }
+
+          keys.push(parent);
+        }
+
+        // Loop through children appending to the array until we hit depth
+
+        var i = 0;
+        while (
+          options.depth > 0 &&
+          (segment = child.exec(key)) !== null &&
+          i < options.depth
+        ) {
+          i += 1;
+          if (
+            !options.plainObjects &&
+            has.call(Object.prototype, segment[1].slice(1, -1))
+          ) {
+            if (!options.allowPrototypes) {
+              return;
+            }
+          }
+          keys.push(segment[1]);
+        }
+
+        // If there's a remainder, just add whatever is left
+
+        if (segment) {
+          keys.push("[" + key.slice(segment.index) + "]");
+        }
+
+        return parseObject(keys, val, options);
+      };
+
+      var normalizeParseOptions = function normalizeParseOptions(opts) {
+        if (!opts) {
+          return defaults;
+        }
+
+        if (
+          opts.decoder !== null &&
+          opts.decoder !== undefined &&
+          typeof opts.decoder !== "function"
+        ) {
+          throw new TypeError("Decoder has to be a function.");
+        }
+
+        if (
+          typeof opts.charset !== "undefined" &&
+          opts.charset !== "utf-8" &&
+          opts.charset !== "iso-8859-1"
+        ) {
+          throw new Error(
+            "The charset option must be either utf-8, iso-8859-1, or undefined"
+          );
+        }
+        var charset =
+          typeof opts.charset === "undefined" ? defaults.charset : opts.charset;
+
+        return {
+          allowDots:
+            typeof opts.allowDots === "undefined"
+              ? defaults.allowDots
+              : !!opts.allowDots,
+          allowPrototypes:
+            typeof opts.allowPrototypes === "boolean"
+              ? opts.allowPrototypes
+              : defaults.allowPrototypes,
+          arrayLimit:
+            typeof opts.arrayLimit === "number"
+              ? opts.arrayLimit
+              : defaults.arrayLimit,
+          charset: charset,
+          charsetSentinel:
+            typeof opts.charsetSentinel === "boolean"
+              ? opts.charsetSentinel
+              : defaults.charsetSentinel,
+          comma: typeof opts.comma === "boolean" ? opts.comma : defaults.comma,
+          decoder:
+            typeof opts.decoder === "function"
+              ? opts.decoder
+              : defaults.decoder,
+          delimiter:
+            typeof opts.delimiter === "string" || utils.isRegExp(opts.delimiter)
+              ? opts.delimiter
+              : defaults.delimiter,
+          // eslint-disable-next-line no-implicit-coercion, no-extra-parens
+          depth:
+            typeof opts.depth === "number" || opts.depth === false
+              ? +opts.depth
+              : defaults.depth,
+          ignoreQueryPrefix: opts.ignoreQueryPrefix === true,
+          interpretNumericEntities:
+            typeof opts.interpretNumericEntities === "boolean"
+              ? opts.interpretNumericEntities
+              : defaults.interpretNumericEntities,
+          parameterLimit:
+            typeof opts.parameterLimit === "number"
+              ? opts.parameterLimit
+              : defaults.parameterLimit,
+          parseArrays: opts.parseArrays !== false,
+          plainObjects:
+            typeof opts.plainObjects === "boolean"
+              ? opts.plainObjects
+              : defaults.plainObjects,
+          strictNullHandling:
+            typeof opts.strictNullHandling === "boolean"
+              ? opts.strictNullHandling
+              : defaults.strictNullHandling
+        };
+      };
+
+      module.exports = function(str, opts) {
+        var options = normalizeParseOptions(opts);
+
+        if (str === "" || str === null || typeof str === "undefined") {
+          return options.plainObjects ? Object.create(null) : {};
+        }
+
+        var tempObj = typeof str === "string" ? parseValues(str, options) : str;
+        var obj = options.plainObjects ? Object.create(null) : {};
+
+        // Iterate over the keys and setup the new object
+
+        var keys = Object.keys(tempObj);
+        for (var i = 0; i < keys.length; ++i) {
+          var key = keys[i];
+          var newObj = parseKeys(key, tempObj[key], options);
+          obj = utils.merge(obj, newObj, options);
+        }
+
+        return utils.compact(obj);
+      };
+
+      /***/
+    },
+
+    /***/ 954: /***/ (
+      module,
+      __unused_webpack_exports,
+      __nccwpck_require__
+    ) => {
+      "use strict";
+
+      var utils = __nccwpck_require__(360);
+      var formats = __nccwpck_require__(907);
+      var has = Object.prototype.hasOwnProperty;
+
+      var arrayPrefixGenerators = {
+        brackets: function brackets(prefix) {
+          return prefix + "[]";
+        },
+        comma: "comma",
+        indices: function indices(prefix, key) {
+          return prefix + "[" + key + "]";
+        },
+        repeat: function repeat(prefix) {
+          return prefix;
+        }
+      };
+
+      var isArray = Array.isArray;
+      var push = Array.prototype.push;
+      var pushToArray = function(arr, valueOrArray) {
+        push.apply(arr, isArray(valueOrArray) ? valueOrArray : [valueOrArray]);
+      };
+
+      var toISO = Date.prototype.toISOString;
+
+      var defaultFormat = formats["default"];
+      var defaults = {
+        addQueryPrefix: false,
+        allowDots: false,
+        charset: "utf-8",
+        charsetSentinel: false,
+        delimiter: "&",
+        encode: true,
+        encoder: utils.encode,
+        encodeValuesOnly: false,
+        format: defaultFormat,
+        formatter: formats.formatters[defaultFormat],
+        // deprecated
+        indices: false,
+        serializeDate: function serializeDate(date) {
+          return toISO.call(date);
+        },
+        skipNulls: false,
+        strictNullHandling: false
+      };
+
+      var isNonNullishPrimitive = function isNonNullishPrimitive(v) {
+        return (
+          typeof v === "string" ||
+          typeof v === "number" ||
+          typeof v === "boolean" ||
+          typeof v === "symbol" ||
+          typeof v === "bigint"
+        );
+      };
+
+      var stringify = function stringify(
+        object,
+        prefix,
+        generateArrayPrefix,
+        strictNullHandling,
+        skipNulls,
+        encoder,
+        filter,
+        sort,
+        allowDots,
+        serializeDate,
+        formatter,
+        encodeValuesOnly,
+        charset
+      ) {
+        var obj = object;
+        if (typeof filter === "function") {
+          obj = filter(prefix, obj);
+        } else if (obj instanceof Date) {
+          obj = serializeDate(obj);
+        } else if (generateArrayPrefix === "comma" && isArray(obj)) {
+          obj = obj.join(",");
+        }
+
+        if (obj === null) {
+          if (strictNullHandling) {
+            return encoder && !encodeValuesOnly
+              ? encoder(prefix, defaults.encoder, charset, "key")
+              : prefix;
+          }
+
+          obj = "";
+        }
+
+        if (isNonNullishPrimitive(obj) || utils.isBuffer(obj)) {
+          if (encoder) {
+            var keyValue = encodeValuesOnly
+              ? prefix
+              : encoder(prefix, defaults.encoder, charset, "key");
+            return [
+              formatter(keyValue) +
+                "=" +
+                formatter(encoder(obj, defaults.encoder, charset, "value"))
+            ];
+          }
+          return [formatter(prefix) + "=" + formatter(String(obj))];
+        }
+
+        var values = [];
+
+        if (typeof obj === "undefined") {
+          return values;
+        }
+
+        var objKeys;
+        if (isArray(filter)) {
+          objKeys = filter;
+        } else {
+          var keys = Object.keys(obj);
+          objKeys = sort ? keys.sort(sort) : keys;
+        }
+
+        for (var i = 0; i < objKeys.length; ++i) {
+          var key = objKeys[i];
+
+          if (skipNulls && obj[key] === null) {
+            continue;
+          }
+
+          if (isArray(obj)) {
+            pushToArray(
+              values,
+              stringify(
+                obj[key],
+                typeof generateArrayPrefix === "function"
+                  ? generateArrayPrefix(prefix, key)
+                  : prefix,
+                generateArrayPrefix,
+                strictNullHandling,
+                skipNulls,
+                encoder,
+                filter,
+                sort,
+                allowDots,
+                serializeDate,
+                formatter,
+                encodeValuesOnly,
+                charset
+              )
+            );
+          } else {
+            pushToArray(
+              values,
+              stringify(
+                obj[key],
+                prefix + (allowDots ? "." + key : "[" + key + "]"),
+                generateArrayPrefix,
+                strictNullHandling,
+                skipNulls,
+                encoder,
+                filter,
+                sort,
+                allowDots,
+                serializeDate,
+                formatter,
+                encodeValuesOnly,
+                charset
+              )
+            );
+          }
+        }
+
+        return values;
+      };
+
+      var normalizeStringifyOptions = function normalizeStringifyOptions(opts) {
+        if (!opts) {
+          return defaults;
+        }
+
+        if (
+          opts.encoder !== null &&
+          opts.encoder !== undefined &&
+          typeof opts.encoder !== "function"
+        ) {
+          throw new TypeError("Encoder has to be a function.");
+        }
+
+        var charset = opts.charset || defaults.charset;
+        if (
+          typeof opts.charset !== "undefined" &&
+          opts.charset !== "utf-8" &&
+          opts.charset !== "iso-8859-1"
+        ) {
+          throw new TypeError(
+            "The charset option must be either utf-8, iso-8859-1, or undefined"
+          );
+        }
+
+        var format = formats["default"];
+        if (typeof opts.format !== "undefined") {
+          if (!has.call(formats.formatters, opts.format)) {
+            throw new TypeError("Unknown format option provided.");
+          }
+          format = opts.format;
+        }
+        var formatter = formats.formatters[format];
+
+        var filter = defaults.filter;
+        if (typeof opts.filter === "function" || isArray(opts.filter)) {
+          filter = opts.filter;
+        }
+
+        return {
+          addQueryPrefix:
+            typeof opts.addQueryPrefix === "boolean"
+              ? opts.addQueryPrefix
+              : defaults.addQueryPrefix,
+          allowDots:
+            typeof opts.allowDots === "undefined"
+              ? defaults.allowDots
+              : !!opts.allowDots,
+          charset: charset,
+          charsetSentinel:
+            typeof opts.charsetSentinel === "boolean"
+              ? opts.charsetSentinel
+              : defaults.charsetSentinel,
+          delimiter:
+            typeof opts.delimiter === "undefined"
+              ? defaults.delimiter
+              : opts.delimiter,
+          encode:
+            typeof opts.encode === "boolean" ? opts.encode : defaults.encode,
+          encoder:
+            typeof opts.encoder === "function"
+              ? opts.encoder
+              : defaults.encoder,
+          encodeValuesOnly:
+            typeof opts.encodeValuesOnly === "boolean"
+              ? opts.encodeValuesOnly
+              : defaults.encodeValuesOnly,
+          filter: filter,
+          formatter: formatter,
+          serializeDate:
+            typeof opts.serializeDate === "function"
+              ? opts.serializeDate
+              : defaults.serializeDate,
+          skipNulls:
+            typeof opts.skipNulls === "boolean"
+              ? opts.skipNulls
+              : defaults.skipNulls,
+          sort: typeof opts.sort === "function" ? opts.sort : null,
+          strictNullHandling:
+            typeof opts.strictNullHandling === "boolean"
+              ? opts.strictNullHandling
+              : defaults.strictNullHandling
+        };
+      };
+
+      module.exports = function(object, opts) {
+        var obj = object;
+        var options = normalizeStringifyOptions(opts);
+
+        var objKeys;
+        var filter;
+
+        if (typeof options.filter === "function") {
+          filter = options.filter;
+          obj = filter("", obj);
+        } else if (isArray(options.filter)) {
+          filter = options.filter;
+          objKeys = filter;
+        }
+
+        var keys = [];
+
+        if (typeof obj !== "object" || obj === null) {
+          return "";
+        }
+
+        var arrayFormat;
+        if (opts && opts.arrayFormat in arrayPrefixGenerators) {
+          arrayFormat = opts.arrayFormat;
+        } else if (opts && "indices" in opts) {
+          arrayFormat = opts.indices ? "indices" : "repeat";
+        } else {
+          arrayFormat = "indices";
+        }
+
+        var generateArrayPrefix = arrayPrefixGenerators[arrayFormat];
+
+        if (!objKeys) {
+          objKeys = Object.keys(obj);
+        }
+
+        if (options.sort) {
+          objKeys.sort(options.sort);
+        }
+
+        for (var i = 0; i < objKeys.length; ++i) {
+          var key = objKeys[i];
+
+          if (options.skipNulls && obj[key] === null) {
+            continue;
+          }
+          pushToArray(
+            keys,
+            stringify(
+              obj[key],
+              key,
+              generateArrayPrefix,
+              options.strictNullHandling,
+              options.skipNulls,
+              options.encode ? options.encoder : null,
+              options.filter,
+              options.sort,
+              options.allowDots,
+              options.serializeDate,
+              options.formatter,
+              options.encodeValuesOnly,
+              options.charset
+            )
+          );
+        }
+
+        var joined = keys.join(options.delimiter);
+        var prefix = options.addQueryPrefix === true ? "?" : "";
+
+        if (options.charsetSentinel) {
+          if (options.charset === "iso-8859-1") {
+            // encodeURIComponent('&#10003;'), the "numeric entity" representation of a checkmark
+            prefix += "utf8=%26%2310003%3B&";
+          } else {
+            // encodeURIComponent('✓')
+            prefix += "utf8=%E2%9C%93&";
+          }
+        }
+
+        return joined.length > 0 ? prefix + joined : "";
+      };
+
+      /***/
+    },
+
+    /***/ 360: /***/ module => {
+      "use strict";
+
+      var has = Object.prototype.hasOwnProperty;
+      var isArray = Array.isArray;
+
+      var hexTable = (function() {
+        var array = [];
+        for (var i = 0; i < 256; ++i) {
+          array.push(
+            "%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase()
+          );
+        }
+
+        return array;
+      })();
+
+      var compactQueue = function compactQueue(queue) {
+        while (queue.length > 1) {
+          var item = queue.pop();
+          var obj = item.obj[item.prop];
+
+          if (isArray(obj)) {
+            var compacted = [];
+
+            for (var j = 0; j < obj.length; ++j) {
+              if (typeof obj[j] !== "undefined") {
+                compacted.push(obj[j]);
+              }
+            }
+
+            item.obj[item.prop] = compacted;
+          }
+        }
+      };
+
+      var arrayToObject = function arrayToObject(source, options) {
+        var obj = options && options.plainObjects ? Object.create(null) : {};
+        for (var i = 0; i < source.length; ++i) {
+          if (typeof source[i] !== "undefined") {
+            obj[i] = source[i];
+          }
+        }
+
+        return obj;
+      };
+
+      var merge = function merge(target, source, options) {
+        /* eslint no-param-reassign: 0 */
+        if (!source) {
+          return target;
+        }
+
+        if (typeof source !== "object") {
+          if (isArray(target)) {
+            target.push(source);
+          } else if (target && typeof target === "object") {
+            if (
+              (options && (options.plainObjects || options.allowPrototypes)) ||
+              !has.call(Object.prototype, source)
+            ) {
+              target[source] = true;
+            }
+          } else {
+            return [target, source];
+          }
+
+          return target;
+        }
+
+        if (!target || typeof target !== "object") {
+          return [target].concat(source);
+        }
+
+        var mergeTarget = target;
+        if (isArray(target) && !isArray(source)) {
+          mergeTarget = arrayToObject(target, options);
+        }
+
+        if (isArray(target) && isArray(source)) {
+          source.forEach(function(item, i) {
+            if (has.call(target, i)) {
+              var targetItem = target[i];
+              if (
+                targetItem &&
+                typeof targetItem === "object" &&
+                item &&
+                typeof item === "object"
+              ) {
+                target[i] = merge(targetItem, item, options);
+              } else {
+                target.push(item);
+              }
+            } else {
+              target[i] = item;
+            }
+          });
+          return target;
+        }
+
+        return Object.keys(source).reduce(function(acc, key) {
+          var value = source[key];
+
+          if (has.call(acc, key)) {
+            acc[key] = merge(acc[key], value, options);
+          } else {
+            acc[key] = value;
+          }
+          return acc;
+        }, mergeTarget);
+      };
+
+      var assign = function assignSingleSource(target, source) {
+        return Object.keys(source).reduce(function(acc, key) {
+          acc[key] = source[key];
+          return acc;
+        }, target);
+      };
+
+      var decode = function(str, decoder, charset) {
+        var strWithoutPlus = str.replace(/\+/g, " ");
+        if (charset === "iso-8859-1") {
+          // unescape never throws, no try...catch needed:
+          return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
+        }
+        // utf-8
+        try {
+          return decodeURIComponent(strWithoutPlus);
+        } catch (e) {
+          return strWithoutPlus;
+        }
+      };
+
+      var encode = function encode(str, defaultEncoder, charset) {
+        // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
+        // It has been adapted here for stricter adherence to RFC 3986
+        if (str.length === 0) {
+          return str;
+        }
+
+        var string = str;
+        if (typeof str === "symbol") {
+          string = Symbol.prototype.toString.call(str);
+        } else if (typeof str !== "string") {
+          string = String(str);
+        }
+
+        if (charset === "iso-8859-1") {
+          return escape(string).replace(/%u[0-9a-f]{4}/gi, function($0) {
+            return "%26%23" + parseInt($0.slice(2), 16) + "%3B";
+          });
+        }
+
+        var out = "";
+        for (var i = 0; i < string.length; ++i) {
+          var c = string.charCodeAt(i);
+
+          if (
+            c === 0x2d || // -
+            c === 0x2e || // .
+            c === 0x5f || // _
+            c === 0x7e || // ~
+            (c >= 0x30 && c <= 0x39) || // 0-9
+            (c >= 0x41 && c <= 0x5a) || // a-z
+            (c >= 0x61 && c <= 0x7a) // A-Z
+          ) {
+            out += string.charAt(i);
+            continue;
+          }
+
+          if (c < 0x80) {
+            out = out + hexTable[c];
+            continue;
+          }
+
+          if (c < 0x800) {
+            out =
+              out + (hexTable[0xc0 | (c >> 6)] + hexTable[0x80 | (c & 0x3f)]);
+            continue;
+          }
+
+          if (c < 0xd800 || c >= 0xe000) {
+            out =
+              out +
+              (hexTable[0xe0 | (c >> 12)] +
+                hexTable[0x80 | ((c >> 6) & 0x3f)] +
+                hexTable[0x80 | (c & 0x3f)]);
+            continue;
+          }
+
+          i += 1;
+          c = 0x10000 + (((c & 0x3ff) << 10) | (string.charCodeAt(i) & 0x3ff));
+          out +=
+            hexTable[0xf0 | (c >> 18)] +
+            hexTable[0x80 | ((c >> 12) & 0x3f)] +
+            hexTable[0x80 | ((c >> 6) & 0x3f)] +
+            hexTable[0x80 | (c & 0x3f)];
+        }
+
+        return out;
+      };
+
+      var compact = function compact(value) {
+        var queue = [{ obj: { o: value }, prop: "o" }];
+        var refs = [];
+
+        for (var i = 0; i < queue.length; ++i) {
+          var item = queue[i];
+          var obj = item.obj[item.prop];
+
+          var keys = Object.keys(obj);
+          for (var j = 0; j < keys.length; ++j) {
+            var key = keys[j];
+            var val = obj[key];
+            if (
+              typeof val === "object" &&
+              val !== null &&
+              refs.indexOf(val) === -1
+            ) {
+              queue.push({ obj: obj, prop: key });
+              refs.push(val);
+            }
+          }
+        }
+
+        compactQueue(queue);
+
+        return value;
+      };
+
+      var isRegExp = function isRegExp(obj) {
+        return Object.prototype.toString.call(obj) === "[object RegExp]";
+      };
+
+      var isBuffer = function isBuffer(obj) {
+        if (!obj || typeof obj !== "object") {
+          return false;
+        }
+
+        return !!(
+          obj.constructor &&
+          obj.constructor.isBuffer &&
+          obj.constructor.isBuffer(obj)
+        );
+      };
+
+      var combine = function combine(a, b) {
+        return [].concat(a, b);
+      };
+
+      module.exports = {
+        arrayToObject: arrayToObject,
+        assign: assign,
+        combine: combine,
+        compact: compact,
+        decode: decode,
+        encode: encode,
+        isBuffer: isBuffer,
+        isRegExp: isRegExp,
+        merge: merge
+      };
+
+      /***/
+    },
+
+    /***/ 294: /***/ (
+      module,
+      __unused_webpack_exports,
+      __nccwpck_require__
+    ) => {
+      module.exports = __nccwpck_require__(219);
+
+      /***/
+    },
+
+    /***/ 219: /***/ (
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) => {
+      "use strict";
+
+      var net = __nccwpck_require__(631);
+      var tls = __nccwpck_require__(16);
+      var http = __nccwpck_require__(605);
+      var https = __nccwpck_require__(211);
+      var events = __nccwpck_require__(614);
+      var assert = __nccwpck_require__(357);
+      var util = __nccwpck_require__(669);
 
       exports.httpOverHttp = httpOverHttp;
       exports.httpsOverHttp = httpsOverHttp;
@@ -2500,1561 +5372,11 @@ module.exports = /******/ (function(modules, runtime) {
       /***/
     },
 
-    /***/ 271: /***/ function(__unusedmodule, exports, __webpack_require__) {
-      "use strict";
-
-      var __awaiter =
-        (this && this.__awaiter) ||
-        function(thisArg, _arguments, P, generator) {
-          function adopt(value) {
-            return value instanceof P
-              ? value
-              : new P(function(resolve) {
-                  resolve(value);
-                });
-          }
-          return new (P || (P = Promise))(function(resolve, reject) {
-            function fulfilled(value) {
-              try {
-                step(generator.next(value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function rejected(value) {
-              try {
-                step(generator["throw"](value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function step(result) {
-              result.done
-                ? resolve(result.value)
-                : adopt(result.value).then(fulfilled, rejected);
-            }
-            step(
-              (generator = generator.apply(thisArg, _arguments || [])).next()
-            );
-          });
-        };
-      Object.defineProperty(exports, "__esModule", { value: true });
-      const os = __webpack_require__(87);
-      const events = __webpack_require__(614);
-      const child = __webpack_require__(129);
-      const path = __webpack_require__(622);
-      const io = __webpack_require__(682);
-      const ioUtil = __webpack_require__(308);
-      /* eslint-disable @typescript-eslint/unbound-method */
-      const IS_WINDOWS = process.platform === "win32";
-      /*
-       * Class for running command line tools. Handles quoting and arg parsing in a platform agnostic way.
-       */
-      class ToolRunner extends events.EventEmitter {
-        constructor(toolPath, args, options) {
-          super();
-          if (!toolPath) {
-            throw new Error("Parameter 'toolPath' cannot be null or empty.");
-          }
-          this.toolPath = toolPath;
-          this.args = args || [];
-          this.options = options || {};
-        }
-        _debug(message) {
-          if (this.options.listeners && this.options.listeners.debug) {
-            this.options.listeners.debug(message);
-          }
-        }
-        _getCommandString(options, noPrefix) {
-          const toolPath = this._getSpawnFileName();
-          const args = this._getSpawnArgs(options);
-          let cmd = noPrefix ? "" : "[command]"; // omit prefix when piped to a second tool
-          if (IS_WINDOWS) {
-            // Windows + cmd file
-            if (this._isCmdFile()) {
-              cmd += toolPath;
-              for (const a of args) {
-                cmd += ` ${a}`;
-              }
-            }
-            // Windows + verbatim
-            else if (options.windowsVerbatimArguments) {
-              cmd += `"${toolPath}"`;
-              for (const a of args) {
-                cmd += ` ${a}`;
-              }
-            }
-            // Windows (regular)
-            else {
-              cmd += this._windowsQuoteCmdArg(toolPath);
-              for (const a of args) {
-                cmd += ` ${this._windowsQuoteCmdArg(a)}`;
-              }
-            }
-          } else {
-            // OSX/Linux - this can likely be improved with some form of quoting.
-            // creating processes on Unix is fundamentally different than Windows.
-            // on Unix, execvp() takes an arg array.
-            cmd += toolPath;
-            for (const a of args) {
-              cmd += ` ${a}`;
-            }
-          }
-          return cmd;
-        }
-        _processLineBuffer(data, strBuffer, onLine) {
-          try {
-            let s = strBuffer + data.toString();
-            let n = s.indexOf(os.EOL);
-            while (n > -1) {
-              const line = s.substring(0, n);
-              onLine(line);
-              // the rest of the string ...
-              s = s.substring(n + os.EOL.length);
-              n = s.indexOf(os.EOL);
-            }
-            strBuffer = s;
-          } catch (err) {
-            // streaming lines to console is best effort.  Don't fail a build.
-            this._debug(`error processing line. Failed with error ${err}`);
-          }
-        }
-        _getSpawnFileName() {
-          if (IS_WINDOWS) {
-            if (this._isCmdFile()) {
-              return process.env["COMSPEC"] || "cmd.exe";
-            }
-          }
-          return this.toolPath;
-        }
-        _getSpawnArgs(options) {
-          if (IS_WINDOWS) {
-            if (this._isCmdFile()) {
-              let argline = `/D /S /C "${this._windowsQuoteCmdArg(
-                this.toolPath
-              )}`;
-              for (const a of this.args) {
-                argline += " ";
-                argline += options.windowsVerbatimArguments
-                  ? a
-                  : this._windowsQuoteCmdArg(a);
-              }
-              argline += '"';
-              return [argline];
-            }
-          }
-          return this.args;
-        }
-        _endsWith(str, end) {
-          return str.endsWith(end);
-        }
-        _isCmdFile() {
-          const upperToolPath = this.toolPath.toUpperCase();
-          return (
-            this._endsWith(upperToolPath, ".CMD") ||
-            this._endsWith(upperToolPath, ".BAT")
-          );
-        }
-        _windowsQuoteCmdArg(arg) {
-          // for .exe, apply the normal quoting rules that libuv applies
-          if (!this._isCmdFile()) {
-            return this._uvQuoteCmdArg(arg);
-          }
-          // otherwise apply quoting rules specific to the cmd.exe command line parser.
-          // the libuv rules are generic and are not designed specifically for cmd.exe
-          // command line parser.
-          //
-          // for a detailed description of the cmd.exe command line parser, refer to
-          // http://stackoverflow.com/questions/4094699/how-does-the-windows-command-interpreter-cmd-exe-parse-scripts/7970912#7970912
-          // need quotes for empty arg
-          if (!arg) {
-            return '""';
-          }
-          // determine whether the arg needs to be quoted
-          const cmdSpecialChars = [
-            " ",
-            "\t",
-            "&",
-            "(",
-            ")",
-            "[",
-            "]",
-            "{",
-            "}",
-            "^",
-            "=",
-            ";",
-            "!",
-            "'",
-            "+",
-            ",",
-            "`",
-            "~",
-            "|",
-            "<",
-            ">",
-            '"'
-          ];
-          let needsQuotes = false;
-          for (const char of arg) {
-            if (cmdSpecialChars.some(x => x === char)) {
-              needsQuotes = true;
-              break;
-            }
-          }
-          // short-circuit if quotes not needed
-          if (!needsQuotes) {
-            return arg;
-          }
-          // the following quoting rules are very similar to the rules that by libuv applies.
-          //
-          // 1) wrap the string in quotes
-          //
-          // 2) double-up quotes - i.e. " => ""
-          //
-          //    this is different from the libuv quoting rules. libuv replaces " with \", which unfortunately
-          //    doesn't work well with a cmd.exe command line.
-          //
-          //    note, replacing " with "" also works well if the arg is passed to a downstream .NET console app.
-          //    for example, the command line:
-          //          foo.exe "myarg:""my val"""
-          //    is parsed by a .NET console app into an arg array:
-          //          [ "myarg:\"my val\"" ]
-          //    which is the same end result when applying libuv quoting rules. although the actual
-          //    command line from libuv quoting rules would look like:
-          //          foo.exe "myarg:\"my val\""
-          //
-          // 3) double-up slashes that precede a quote,
-          //    e.g.  hello \world    => "hello \world"
-          //          hello\"world    => "hello\\""world"
-          //          hello\\"world   => "hello\\\\""world"
-          //          hello world\    => "hello world\\"
-          //
-          //    technically this is not required for a cmd.exe command line, or the batch argument parser.
-          //    the reasons for including this as a .cmd quoting rule are:
-          //
-          //    a) this is optimized for the scenario where the argument is passed from the .cmd file to an
-          //       external program. many programs (e.g. .NET console apps) rely on the slash-doubling rule.
-          //
-          //    b) it's what we've been doing previously (by deferring to node default behavior) and we
-          //       haven't heard any complaints about that aspect.
-          //
-          // note, a weakness of the quoting rules chosen here, is that % is not escaped. in fact, % cannot be
-          // escaped when used on the command line directly - even though within a .cmd file % can be escaped
-          // by using %%.
-          //
-          // the saving grace is, on the command line, %var% is left as-is if var is not defined. this contrasts
-          // the line parsing rules within a .cmd file, where if var is not defined it is replaced with nothing.
-          //
-          // one option that was explored was replacing % with ^% - i.e. %var% => ^%var^%. this hack would
-          // often work, since it is unlikely that var^ would exist, and the ^ character is removed when the
-          // variable is used. the problem, however, is that ^ is not removed when %* is used to pass the args
-          // to an external program.
-          //
-          // an unexplored potential solution for the % escaping problem, is to create a wrapper .cmd file.
-          // % can be escaped within a .cmd file.
-          let reverse = '"';
-          let quoteHit = true;
-          for (let i = arg.length; i > 0; i--) {
-            // walk the string in reverse
-            reverse += arg[i - 1];
-            if (quoteHit && arg[i - 1] === "\\") {
-              reverse += "\\"; // double the slash
-            } else if (arg[i - 1] === '"') {
-              quoteHit = true;
-              reverse += '"'; // double the quote
-            } else {
-              quoteHit = false;
-            }
-          }
-          reverse += '"';
-          return reverse
-            .split("")
-            .reverse()
-            .join("");
-        }
-        _uvQuoteCmdArg(arg) {
-          // Tool runner wraps child_process.spawn() and needs to apply the same quoting as
-          // Node in certain cases where the undocumented spawn option windowsVerbatimArguments
-          // is used.
-          //
-          // Since this function is a port of quote_cmd_arg from Node 4.x (technically, lib UV,
-          // see https://github.com/nodejs/node/blob/v4.x/deps/uv/src/win/process.c for details),
-          // pasting copyright notice from Node within this function:
-          //
-          //      Copyright Joyent, Inc. and other Node contributors. All rights reserved.
-          //
-          //      Permission is hereby granted, free of charge, to any person obtaining a copy
-          //      of this software and associated documentation files (the "Software"), to
-          //      deal in the Software without restriction, including without limitation the
-          //      rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-          //      sell copies of the Software, and to permit persons to whom the Software is
-          //      furnished to do so, subject to the following conditions:
-          //
-          //      The above copyright notice and this permission notice shall be included in
-          //      all copies or substantial portions of the Software.
-          //
-          //      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-          //      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-          //      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-          //      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-          //      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-          //      FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-          //      IN THE SOFTWARE.
-          if (!arg) {
-            // Need double quotation for empty argument
-            return '""';
-          }
-          if (!arg.includes(" ") && !arg.includes("\t") && !arg.includes('"')) {
-            // No quotation needed
-            return arg;
-          }
-          if (!arg.includes('"') && !arg.includes("\\")) {
-            // No embedded double quotes or backslashes, so I can just wrap
-            // quote marks around the whole thing.
-            return `"${arg}"`;
-          }
-          // Expected input/output:
-          //   input : hello"world
-          //   output: "hello\"world"
-          //   input : hello""world
-          //   output: "hello\"\"world"
-          //   input : hello\world
-          //   output: hello\world
-          //   input : hello\\world
-          //   output: hello\\world
-          //   input : hello\"world
-          //   output: "hello\\\"world"
-          //   input : hello\\"world
-          //   output: "hello\\\\\"world"
-          //   input : hello world\
-          //   output: "hello world\\" - note the comment in libuv actually reads "hello world\"
-          //                             but it appears the comment is wrong, it should be "hello world\\"
-          let reverse = '"';
-          let quoteHit = true;
-          for (let i = arg.length; i > 0; i--) {
-            // walk the string in reverse
-            reverse += arg[i - 1];
-            if (quoteHit && arg[i - 1] === "\\") {
-              reverse += "\\";
-            } else if (arg[i - 1] === '"') {
-              quoteHit = true;
-              reverse += "\\";
-            } else {
-              quoteHit = false;
-            }
-          }
-          reverse += '"';
-          return reverse
-            .split("")
-            .reverse()
-            .join("");
-        }
-        _cloneExecOptions(options) {
-          options = options || {};
-          const result = {
-            cwd: options.cwd || process.cwd(),
-            env: options.env || process.env,
-            silent: options.silent || false,
-            windowsVerbatimArguments: options.windowsVerbatimArguments || false,
-            failOnStdErr: options.failOnStdErr || false,
-            ignoreReturnCode: options.ignoreReturnCode || false,
-            delay: options.delay || 10000
-          };
-          result.outStream = options.outStream || process.stdout;
-          result.errStream = options.errStream || process.stderr;
-          return result;
-        }
-        _getSpawnOptions(options, toolPath) {
-          options = options || {};
-          const result = {};
-          result.cwd = options.cwd;
-          result.env = options.env;
-          result["windowsVerbatimArguments"] =
-            options.windowsVerbatimArguments || this._isCmdFile();
-          if (options.windowsVerbatimArguments) {
-            result.argv0 = `"${toolPath}"`;
-          }
-          return result;
-        }
-        /**
-         * Exec a tool.
-         * Output will be streamed to the live console.
-         * Returns promise with return code
-         *
-         * @param     tool     path to tool to exec
-         * @param     options  optional exec options.  See ExecOptions
-         * @returns   number
-         */
-        exec() {
-          return __awaiter(this, void 0, void 0, function*() {
-            // root the tool path if it is unrooted and contains relative pathing
-            if (
-              !ioUtil.isRooted(this.toolPath) &&
-              (this.toolPath.includes("/") ||
-                (IS_WINDOWS && this.toolPath.includes("\\")))
-            ) {
-              // prefer options.cwd if it is specified, however options.cwd may also need to be rooted
-              this.toolPath = path.resolve(
-                process.cwd(),
-                this.options.cwd || process.cwd(),
-                this.toolPath
-              );
-            }
-            // if the tool is only a file name, then resolve it from the PATH
-            // otherwise verify it exists (add extension on Windows if necessary)
-            this.toolPath = yield io.which(this.toolPath, true);
-            return new Promise((resolve, reject) => {
-              this._debug(`exec tool: ${this.toolPath}`);
-              this._debug("arguments:");
-              for (const arg of this.args) {
-                this._debug(`   ${arg}`);
-              }
-              const optionsNonNull = this._cloneExecOptions(this.options);
-              if (!optionsNonNull.silent && optionsNonNull.outStream) {
-                optionsNonNull.outStream.write(
-                  this._getCommandString(optionsNonNull) + os.EOL
-                );
-              }
-              const state = new ExecState(optionsNonNull, this.toolPath);
-              state.on("debug", message => {
-                this._debug(message);
-              });
-              const fileName = this._getSpawnFileName();
-              const cp = child.spawn(
-                fileName,
-                this._getSpawnArgs(optionsNonNull),
-                this._getSpawnOptions(this.options, fileName)
-              );
-              const stdbuffer = "";
-              if (cp.stdout) {
-                cp.stdout.on("data", data => {
-                  if (this.options.listeners && this.options.listeners.stdout) {
-                    this.options.listeners.stdout(data);
-                  }
-                  if (!optionsNonNull.silent && optionsNonNull.outStream) {
-                    optionsNonNull.outStream.write(data);
-                  }
-                  this._processLineBuffer(data, stdbuffer, line => {
-                    if (
-                      this.options.listeners &&
-                      this.options.listeners.stdline
-                    ) {
-                      this.options.listeners.stdline(line);
-                    }
-                  });
-                });
-              }
-              const errbuffer = "";
-              if (cp.stderr) {
-                cp.stderr.on("data", data => {
-                  state.processStderr = true;
-                  if (this.options.listeners && this.options.listeners.stderr) {
-                    this.options.listeners.stderr(data);
-                  }
-                  if (
-                    !optionsNonNull.silent &&
-                    optionsNonNull.errStream &&
-                    optionsNonNull.outStream
-                  ) {
-                    const s = optionsNonNull.failOnStdErr
-                      ? optionsNonNull.errStream
-                      : optionsNonNull.outStream;
-                    s.write(data);
-                  }
-                  this._processLineBuffer(data, errbuffer, line => {
-                    if (
-                      this.options.listeners &&
-                      this.options.listeners.errline
-                    ) {
-                      this.options.listeners.errline(line);
-                    }
-                  });
-                });
-              }
-              cp.on("error", err => {
-                state.processError = err.message;
-                state.processExited = true;
-                state.processClosed = true;
-                state.CheckComplete();
-              });
-              cp.on("exit", code => {
-                state.processExitCode = code;
-                state.processExited = true;
-                this._debug(
-                  `Exit code ${code} received from tool '${this.toolPath}'`
-                );
-                state.CheckComplete();
-              });
-              cp.on("close", code => {
-                state.processExitCode = code;
-                state.processExited = true;
-                state.processClosed = true;
-                this._debug(
-                  `STDIO streams have closed for tool '${this.toolPath}'`
-                );
-                state.CheckComplete();
-              });
-              state.on("done", (error, exitCode) => {
-                if (stdbuffer.length > 0) {
-                  this.emit("stdline", stdbuffer);
-                }
-                if (errbuffer.length > 0) {
-                  this.emit("errline", errbuffer);
-                }
-                cp.removeAllListeners();
-                if (error) {
-                  reject(error);
-                } else {
-                  resolve(exitCode);
-                }
-              });
-            });
-          });
-        }
-      }
-      exports.ToolRunner = ToolRunner;
-      /**
-       * Convert an arg string to an array of args. Handles escaping
-       *
-       * @param    argString   string of arguments
-       * @returns  string[]    array of arguments
-       */
-      function argStringToArray(argString) {
-        const args = [];
-        let inQuotes = false;
-        let escaped = false;
-        let arg = "";
-        function append(c) {
-          // we only escape double quotes.
-          if (escaped && c !== '"') {
-            arg += "\\";
-          }
-          arg += c;
-          escaped = false;
-        }
-        for (let i = 0; i < argString.length; i++) {
-          const c = argString.charAt(i);
-          if (c === '"') {
-            if (!escaped) {
-              inQuotes = !inQuotes;
-            } else {
-              append(c);
-            }
-            continue;
-          }
-          if (c === "\\" && escaped) {
-            append(c);
-            continue;
-          }
-          if (c === "\\" && inQuotes) {
-            escaped = true;
-            continue;
-          }
-          if (c === " " && !inQuotes) {
-            if (arg.length > 0) {
-              args.push(arg);
-              arg = "";
-            }
-            continue;
-          }
-          append(c);
-        }
-        if (arg.length > 0) {
-          args.push(arg.trim());
-        }
-        return args;
-      }
-      exports.argStringToArray = argStringToArray;
-      class ExecState extends events.EventEmitter {
-        constructor(options, toolPath) {
-          super();
-          this.processClosed = false; // tracks whether the process has exited and stdio is closed
-          this.processError = "";
-          this.processExitCode = 0;
-          this.processExited = false; // tracks whether the process has exited
-          this.processStderr = false; // tracks whether stderr was written to
-          this.delay = 10000; // 10 seconds
-          this.done = false;
-          this.timeout = null;
-          if (!toolPath) {
-            throw new Error("toolPath must not be empty");
-          }
-          this.options = options;
-          this.toolPath = toolPath;
-          if (options.delay) {
-            this.delay = options.delay;
-          }
-        }
-        CheckComplete() {
-          if (this.done) {
-            return;
-          }
-          if (this.processClosed) {
-            this._setResult();
-          } else if (this.processExited) {
-            this.timeout = setTimeout(
-              ExecState.HandleTimeout,
-              this.delay,
-              this
-            );
-          }
-        }
-        _debug(message) {
-          this.emit("debug", message);
-        }
-        _setResult() {
-          // determine whether there is an error
-          let error;
-          if (this.processExited) {
-            if (this.processError) {
-              error = new Error(
-                `There was an error when attempting to execute the process '${this.toolPath}'. This may indicate the process failed to start. Error: ${this.processError}`
-              );
-            } else if (
-              this.processExitCode !== 0 &&
-              !this.options.ignoreReturnCode
-            ) {
-              error = new Error(
-                `The process '${this.toolPath}' failed with exit code ${this.processExitCode}`
-              );
-            } else if (this.processStderr && this.options.failOnStdErr) {
-              error = new Error(
-                `The process '${this.toolPath}' failed because one or more lines were written to the STDERR stream`
-              );
-            }
-          }
-          // clear the timeout
-          if (this.timeout) {
-            clearTimeout(this.timeout);
-            this.timeout = null;
-          }
-          this.done = true;
-          this.emit("done", error, this.processExitCode);
-        }
-        static HandleTimeout(state) {
-          if (state.done) {
-            return;
-          }
-          if (!state.processClosed && state.processExited) {
-            const message = `The STDIO streams did not close within ${state.delay /
-              1000} seconds of the exit event from process '${
-              state.toolPath
-            }'. This may indicate a child process inherited the STDIO streams and has not yet exited.`;
-            state._debug(message);
-          }
-          state._setResult();
-        }
-      }
-      //# sourceMappingURL=toolrunner.js.map
-
-      /***/
-    },
-
-    /***/ 289: /***/ function(__unusedmodule, exports, __webpack_require__) {
-      "use strict";
-
-      var __awaiter =
-        (this && this.__awaiter) ||
-        function(thisArg, _arguments, P, generator) {
-          function adopt(value) {
-            return value instanceof P
-              ? value
-              : new P(function(resolve) {
-                  resolve(value);
-                });
-          }
-          return new (P || (P = Promise))(function(resolve, reject) {
-            function fulfilled(value) {
-              try {
-                step(generator.next(value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function rejected(value) {
-              try {
-                step(generator["throw"](value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function step(result) {
-              result.done
-                ? resolve(result.value)
-                : adopt(result.value).then(fulfilled, rejected);
-            }
-            step(
-              (generator = generator.apply(thisArg, _arguments || [])).next()
-            );
-          });
-        };
-      var __generator =
-        (this && this.__generator) ||
-        function(thisArg, body) {
-          var _ = {
-              label: 0,
-              sent: function() {
-                if (t[0] & 1) throw t[1];
-                return t[1];
-              },
-              trys: [],
-              ops: []
-            },
-            f,
-            y,
-            t,
-            g;
-          return (
-            (g = { next: verb(0), throw: verb(1), return: verb(2) }),
-            typeof Symbol === "function" &&
-              (g[Symbol.iterator] = function() {
-                return this;
-              }),
-            g
-          );
-          function verb(n) {
-            return function(v) {
-              return step([n, v]);
-            };
-          }
-          function step(op) {
-            if (f) throw new TypeError("Generator is already executing.");
-            while (_)
-              try {
-                if (
-                  ((f = 1),
-                  y &&
-                    (t =
-                      op[0] & 2
-                        ? y["return"]
-                        : op[0]
-                        ? y["throw"] || ((t = y["return"]) && t.call(y), 0)
-                        : y.next) &&
-                    !(t = t.call(y, op[1])).done)
-                )
-                  return t;
-                if (((y = 0), t)) op = [op[0] & 2, t.value];
-                switch (op[0]) {
-                  case 0:
-                  case 1:
-                    t = op;
-                    break;
-                  case 4:
-                    _.label++;
-                    return { value: op[1], done: false };
-                  case 5:
-                    _.label++;
-                    y = op[1];
-                    op = [0];
-                    continue;
-                  case 7:
-                    op = _.ops.pop();
-                    _.trys.pop();
-                    continue;
-                  default:
-                    if (
-                      !((t = _.trys), (t = t.length > 0 && t[t.length - 1])) &&
-                      (op[0] === 6 || op[0] === 2)
-                    ) {
-                      _ = 0;
-                      continue;
-                    }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
-                      _.label = op[1];
-                      break;
-                    }
-                    if (op[0] === 6 && _.label < t[1]) {
-                      _.label = t[1];
-                      t = op;
-                      break;
-                    }
-                    if (t && _.label < t[2]) {
-                      _.label = t[2];
-                      _.ops.push(op);
-                      break;
-                    }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop();
-                    continue;
-                }
-                op = body.call(thisArg, _);
-              } catch (e) {
-                op = [6, e];
-                y = 0;
-              } finally {
-                f = t = 0;
-              }
-            if (op[0] & 5) throw op[1];
-            return { value: op[0] ? op[1] : void 0, done: true };
-          }
-        };
-      var __importStar =
-        (this && this.__importStar) ||
-        function(mod) {
-          if (mod && mod.__esModule) return mod;
-          var result = {};
-          if (mod != null)
-            for (var k in mod)
-              if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-          result["default"] = mod;
-          return result;
-        };
-      Object.defineProperty(exports, "__esModule", { value: true });
-      var fs = __importStar(__webpack_require__(747));
-      var path = __importStar(__webpack_require__(622));
-      var core = __importStar(__webpack_require__(33));
-      var io = __importStar(__webpack_require__(682));
-      var tc = __importStar(__webpack_require__(700));
-      var httpm = __importStar(__webpack_require__(609));
-      var tempDirectory = process.env["RUNNER_TEMP"] || "";
-      var IS_WINDOWS = process.platform === "win32";
-      if (!tempDirectory) {
-        var baseLocation = void 0;
-        if (IS_WINDOWS) {
-          // On windows use the USERPROFILE env variable
-          baseLocation = process.env["USERPROFILE"] || "C:\\";
-        } else {
-          if (process.platform === "darwin") {
-            baseLocation = "/Users";
-          } else {
-            baseLocation = "/home";
-          }
-        }
-        tempDirectory = path.join(baseLocation, "actions", "temp");
-      }
-      var GHIDRA_BASE_URL = "https://ghidra-sre.org/";
-      var http = new httpm.HttpClient("setup-ghidra");
-      function getGhidraVersionInfo() {
-        return __awaiter(this, void 0, void 0, function() {
-          var topPageHTML, releaseNoteURL, releaseNoteHTML, ptn, m, versionInfo;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                return [4 /*yield*/, http.get(GHIDRA_BASE_URL)];
-              case 1:
-                return [4 /*yield*/, _a.sent().readBody()];
-              case 2:
-                topPageHTML = _a.sent();
-                releaseNoteURL =
-                  topPageHTML.match(/releaseNotes.*\.html/) || "";
-                return [
-                  4 /*yield*/,
-                  http.get(GHIDRA_BASE_URL + releaseNoteURL)
-                ];
-              case 3:
-                return [4 /*yield*/, _a.sent().readBody()];
-              case 4:
-                releaseNoteHTML = _a.sent();
-                ptn = /<td>(\d+\.\d+(?:\.\d+)?)<\/td>\r\n.*<a href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\">/gi;
-                versionInfo = {};
-                while ((m = ptn.exec(releaseNoteHTML)) !== null) {
-                  versionInfo[m[1]] = m[2];
-                }
-                return [2 /*return*/, versionInfo];
-            }
-          });
-        });
-      }
-      function getLatestGhidraVersionInfo() {
-        return __awaiter(this, void 0, void 0, function() {
-          var topPageHTML, m, latestVersionZip, latestVersionInfo, version;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                return [4 /*yield*/, http.get(GHIDRA_BASE_URL)];
-              case 1:
-                return [4 /*yield*/, _a.sent().readBody()];
-              case 2:
-                topPageHTML = _a.sent();
-                m = topPageHTML.match(
-                  /href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\"/
-                );
-                if (m === null) {
-                  throw new Error("Ghidra Archive List was not found.");
-                } else {
-                  latestVersionZip = m[1];
-                  latestVersionInfo = {};
-                  version = latestVersionZip.split("_")[1];
-                  latestVersionInfo[version] = latestVersionZip;
-                  return [2 /*return*/, latestVersionInfo];
-                }
-                return [2 /*return*/];
-            }
-          });
-        });
-      }
-      function extractFiles(file, destinationFolder) {
-        return __awaiter(this, void 0, void 0, function() {
-          var stats;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                return [4 /*yield*/, io.mkdirP(destinationFolder)];
-              case 1:
-                _a.sent();
-                stats = fs.statSync(file);
-                if (!stats) {
-                  throw new Error(
-                    "Failed to extract " + file + " - it doesn't exist"
-                  );
-                } else if (stats.isDirectory()) {
-                  throw new Error(
-                    "Failed to extract " + file + " - it is a directory"
-                  );
-                }
-                return [4 /*yield*/, tc.extractZip(file, destinationFolder)];
-              case 2:
-                _a.sent();
-                return [2 /*return*/];
-            }
-          });
-        });
-      }
-      function extractGhidraArchive(src, dst) {
-        return __awaiter(this, void 0, void 0, function() {
-          var ghidraArchivePath, stats, ghidraDirectory;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                ghidraArchivePath = path.normalize(src);
-                stats = fs.statSync(ghidraArchivePath);
-                if (!stats.isFile()) return [3 /*break*/, 2];
-                return [4 /*yield*/, extractFiles(src, dst)];
-              case 1:
-                _a.sent();
-                ghidraDirectory = path.join(dst, fs.readdirSync(dst)[0]);
-                return [2 /*return*/, ghidraDirectory];
-              case 2:
-                throw new Error(ghidraArchivePath + " is not a file");
-            }
-          });
-        });
-      }
-      function installGhidra(version) {
-        if (version === void 0) {
-          version = "";
-        }
-        return __awaiter(this, void 0, void 0, function() {
-          var toolPath,
-            ghidraVersionInfo_1,
-            info,
-            info,
-            err,
-            savedPath,
-            tempDir,
-            ghidraInstallDir;
-          return __generator(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                toolPath = tc.find("ghidra", version);
-                if (!toolPath) return [3 /*break*/, 1];
-                core.debug("Tool found in cache " + toolPath);
-                return [3 /*break*/, 9];
-              case 1:
-                ghidraVersionInfo_1 = { version: "", archive: "" };
-                if (!(version === "")) return [3 /*break*/, 3];
-                return [4 /*yield*/, getLatestGhidraVersionInfo()];
-              case 2:
-                info = _a.sent();
-                Object.entries(info).map(function(_a) {
-                  var _version = _a[0],
-                    ghidraZipName = _a[1];
-                  ghidraVersionInfo_1.version = _version;
-                  ghidraVersionInfo_1.archive = ghidraZipName;
-                });
-                return [3 /*break*/, 5];
-              case 3:
-                return [4 /*yield*/, getGhidraVersionInfo()];
-              case 4:
-                info = _a.sent();
-                if (info[version] === undefined) {
-                  err = new Error("[ERROR] " + version + " is not found.");
-                  throw err;
-                }
-                ghidraVersionInfo_1.version = version;
-                ghidraVersionInfo_1.archive = info[version];
-                _a.label = 5;
-              case 5:
-                console.log(
-                  "Version: " +
-                    ghidraVersionInfo_1.version +
-                    ", Archive: " +
-                    ghidraVersionInfo_1.archive
-                );
-                return [
-                  4 /*yield*/,
-                  tc.downloadTool(GHIDRA_BASE_URL + ghidraVersionInfo_1.archive)
-                ];
-              case 6:
-                savedPath = _a.sent();
-                tempDir = path.join(
-                  tempDirectory,
-                  "temp_" + Math.floor(Math.random() * 2000000000)
-                );
-                return [4 /*yield*/, extractGhidraArchive(savedPath, tempDir)];
-              case 7:
-                ghidraInstallDir = _a.sent();
-                return [
-                  4 /*yield*/,
-                  tc.cacheDir(ghidraInstallDir, "ghidra", version)
-                ];
-              case 8:
-                toolPath = _a.sent();
-                _a.label = 9;
-              case 9:
-                core.exportVariable("GHIDRA_INSTALL_DIR", toolPath);
-                return [2 /*return*/];
-            }
-          });
-        });
-      }
-      exports.installGhidra = installGhidra;
-
-      /***/
-    },
-
-    /***/ 308: /***/ function(__unusedmodule, exports, __webpack_require__) {
-      "use strict";
-
-      var __awaiter =
-        (this && this.__awaiter) ||
-        function(thisArg, _arguments, P, generator) {
-          function adopt(value) {
-            return value instanceof P
-              ? value
-              : new P(function(resolve) {
-                  resolve(value);
-                });
-          }
-          return new (P || (P = Promise))(function(resolve, reject) {
-            function fulfilled(value) {
-              try {
-                step(generator.next(value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function rejected(value) {
-              try {
-                step(generator["throw"](value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function step(result) {
-              result.done
-                ? resolve(result.value)
-                : adopt(result.value).then(fulfilled, rejected);
-            }
-            step(
-              (generator = generator.apply(thisArg, _arguments || [])).next()
-            );
-          });
-        };
-      var _a;
-      Object.defineProperty(exports, "__esModule", { value: true });
-      const assert_1 = __webpack_require__(357);
-      const fs = __webpack_require__(747);
-      const path = __webpack_require__(622);
-      (_a = fs.promises),
-        (exports.chmod = _a.chmod),
-        (exports.copyFile = _a.copyFile),
-        (exports.lstat = _a.lstat),
-        (exports.mkdir = _a.mkdir),
-        (exports.readdir = _a.readdir),
-        (exports.readlink = _a.readlink),
-        (exports.rename = _a.rename),
-        (exports.rmdir = _a.rmdir),
-        (exports.stat = _a.stat),
-        (exports.symlink = _a.symlink),
-        (exports.unlink = _a.unlink);
-      exports.IS_WINDOWS = process.platform === "win32";
-      function exists(fsPath) {
-        return __awaiter(this, void 0, void 0, function*() {
-          try {
-            yield exports.stat(fsPath);
-          } catch (err) {
-            if (err.code === "ENOENT") {
-              return false;
-            }
-            throw err;
-          }
-          return true;
-        });
-      }
-      exports.exists = exists;
-      function isDirectory(fsPath, useStat = false) {
-        return __awaiter(this, void 0, void 0, function*() {
-          const stats = useStat
-            ? yield exports.stat(fsPath)
-            : yield exports.lstat(fsPath);
-          return stats.isDirectory();
-        });
-      }
-      exports.isDirectory = isDirectory;
-      /**
-       * On OSX/Linux, true if path starts with '/'. On Windows, true for paths like:
-       * \, \hello, \\hello\share, C:, and C:\hello (and corresponding alternate separator cases).
-       */
-      function isRooted(p) {
-        p = normalizeSeparators(p);
-        if (!p) {
-          throw new Error('isRooted() parameter "p" cannot be empty');
-        }
-        if (exports.IS_WINDOWS) {
-          return (
-            p.startsWith("\\") || /^[A-Z]:/i.test(p) // e.g. \ or \hello or \\hello
-          ); // e.g. C: or C:\hello
-        }
-        return p.startsWith("/");
-      }
-      exports.isRooted = isRooted;
-      /**
-       * Recursively create a directory at `fsPath`.
-       *
-       * This implementation is optimistic, meaning it attempts to create the full
-       * path first, and backs up the path stack from there.
-       *
-       * @param fsPath The path to create
-       * @param maxDepth The maximum recursion depth
-       * @param depth The current recursion depth
-       */
-      function mkdirP(fsPath, maxDepth = 1000, depth = 1) {
-        return __awaiter(this, void 0, void 0, function*() {
-          assert_1.ok(fsPath, "a path argument must be provided");
-          fsPath = path.resolve(fsPath);
-          if (depth >= maxDepth) return exports.mkdir(fsPath);
-          try {
-            yield exports.mkdir(fsPath);
-            return;
-          } catch (err) {
-            switch (err.code) {
-              case "ENOENT": {
-                yield mkdirP(path.dirname(fsPath), maxDepth, depth + 1);
-                yield exports.mkdir(fsPath);
-                return;
-              }
-              default: {
-                let stats;
-                try {
-                  stats = yield exports.stat(fsPath);
-                } catch (err2) {
-                  throw err;
-                }
-                if (!stats.isDirectory()) throw err;
-              }
-            }
-          }
-        });
-      }
-      exports.mkdirP = mkdirP;
-      /**
-       * Best effort attempt to determine whether a file exists and is executable.
-       * @param filePath    file path to check
-       * @param extensions  additional file extensions to try
-       * @return if file exists and is executable, returns the file path. otherwise empty string.
-       */
-      function tryGetExecutablePath(filePath, extensions) {
-        return __awaiter(this, void 0, void 0, function*() {
-          let stats = undefined;
-          try {
-            // test file exists
-            stats = yield exports.stat(filePath);
-          } catch (err) {
-            if (err.code !== "ENOENT") {
-              // eslint-disable-next-line no-console
-              console.log(
-                `Unexpected error attempting to determine if executable file exists '${filePath}': ${err}`
-              );
-            }
-          }
-          if (stats && stats.isFile()) {
-            if (exports.IS_WINDOWS) {
-              // on Windows, test for valid extension
-              const upperExt = path.extname(filePath).toUpperCase();
-              if (
-                extensions.some(validExt => validExt.toUpperCase() === upperExt)
-              ) {
-                return filePath;
-              }
-            } else {
-              if (isUnixExecutable(stats)) {
-                return filePath;
-              }
-            }
-          }
-          // try each extension
-          const originalFilePath = filePath;
-          for (const extension of extensions) {
-            filePath = originalFilePath + extension;
-            stats = undefined;
-            try {
-              stats = yield exports.stat(filePath);
-            } catch (err) {
-              if (err.code !== "ENOENT") {
-                // eslint-disable-next-line no-console
-                console.log(
-                  `Unexpected error attempting to determine if executable file exists '${filePath}': ${err}`
-                );
-              }
-            }
-            if (stats && stats.isFile()) {
-              if (exports.IS_WINDOWS) {
-                // preserve the case of the actual file (since an extension was appended)
-                try {
-                  const directory = path.dirname(filePath);
-                  const upperName = path.basename(filePath).toUpperCase();
-                  for (const actualName of yield exports.readdir(directory)) {
-                    if (upperName === actualName.toUpperCase()) {
-                      filePath = path.join(directory, actualName);
-                      break;
-                    }
-                  }
-                } catch (err) {
-                  // eslint-disable-next-line no-console
-                  console.log(
-                    `Unexpected error attempting to determine the actual case of the file '${filePath}': ${err}`
-                  );
-                }
-                return filePath;
-              } else {
-                if (isUnixExecutable(stats)) {
-                  return filePath;
-                }
-              }
-            }
-          }
-          return "";
-        });
-      }
-      exports.tryGetExecutablePath = tryGetExecutablePath;
-      function normalizeSeparators(p) {
-        p = p || "";
-        if (exports.IS_WINDOWS) {
-          // convert slashes on Windows
-          p = p.replace(/\//g, "\\");
-          // remove redundant slashes
-          return p.replace(/\\\\+/g, "\\");
-        }
-        // remove redundant slashes
-        return p.replace(/\/\/+/g, "/");
-      }
-      // on Mac/Linux, test the execute bit
-      //     R   W  X  R  W X R W X
-      //   256 128 64 32 16 8 4 2 1
-      function isUnixExecutable(stats) {
-        return (
-          (stats.mode & 1) > 0 ||
-          ((stats.mode & 8) > 0 && stats.gid === process.getgid()) ||
-          ((stats.mode & 64) > 0 && stats.uid === process.getuid())
-        );
-      }
-      //# sourceMappingURL=io-util.js.map
-
-      /***/
-    },
-
-    /***/ 357: /***/ function(module) {
-      module.exports = require("assert");
-
-      /***/
-    },
-
-    /***/ 417: /***/ function(module) {
-      module.exports = require("crypto");
-
-      /***/
-    },
-
-    /***/ 467: /***/ function(module, __unusedexports, __webpack_require__) {
-      "use strict";
-
-      var stringify = __webpack_require__(674);
-      var parse = __webpack_require__(960);
-      var formats = __webpack_require__(68);
-
-      module.exports = {
-        formats: formats,
-        parse: parse,
-        stringify: stringify
-      };
-
-      /***/
-    },
-
-    /***/ 498: /***/ function(module) {
-      "use strict";
-
-      var has = Object.prototype.hasOwnProperty;
-      var isArray = Array.isArray;
-
-      var hexTable = (function() {
-        var array = [];
-        for (var i = 0; i < 256; ++i) {
-          array.push(
-            "%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase()
-          );
-        }
-
-        return array;
-      })();
-
-      var compactQueue = function compactQueue(queue) {
-        while (queue.length > 1) {
-          var item = queue.pop();
-          var obj = item.obj[item.prop];
-
-          if (isArray(obj)) {
-            var compacted = [];
-
-            for (var j = 0; j < obj.length; ++j) {
-              if (typeof obj[j] !== "undefined") {
-                compacted.push(obj[j]);
-              }
-            }
-
-            item.obj[item.prop] = compacted;
-          }
-        }
-      };
-
-      var arrayToObject = function arrayToObject(source, options) {
-        var obj = options && options.plainObjects ? Object.create(null) : {};
-        for (var i = 0; i < source.length; ++i) {
-          if (typeof source[i] !== "undefined") {
-            obj[i] = source[i];
-          }
-        }
-
-        return obj;
-      };
-
-      var merge = function merge(target, source, options) {
-        /* eslint no-param-reassign: 0 */
-        if (!source) {
-          return target;
-        }
-
-        if (typeof source !== "object") {
-          if (isArray(target)) {
-            target.push(source);
-          } else if (target && typeof target === "object") {
-            if (
-              (options && (options.plainObjects || options.allowPrototypes)) ||
-              !has.call(Object.prototype, source)
-            ) {
-              target[source] = true;
-            }
-          } else {
-            return [target, source];
-          }
-
-          return target;
-        }
-
-        if (!target || typeof target !== "object") {
-          return [target].concat(source);
-        }
-
-        var mergeTarget = target;
-        if (isArray(target) && !isArray(source)) {
-          mergeTarget = arrayToObject(target, options);
-        }
-
-        if (isArray(target) && isArray(source)) {
-          source.forEach(function(item, i) {
-            if (has.call(target, i)) {
-              var targetItem = target[i];
-              if (
-                targetItem &&
-                typeof targetItem === "object" &&
-                item &&
-                typeof item === "object"
-              ) {
-                target[i] = merge(targetItem, item, options);
-              } else {
-                target.push(item);
-              }
-            } else {
-              target[i] = item;
-            }
-          });
-          return target;
-        }
-
-        return Object.keys(source).reduce(function(acc, key) {
-          var value = source[key];
-
-          if (has.call(acc, key)) {
-            acc[key] = merge(acc[key], value, options);
-          } else {
-            acc[key] = value;
-          }
-          return acc;
-        }, mergeTarget);
-      };
-
-      var assign = function assignSingleSource(target, source) {
-        return Object.keys(source).reduce(function(acc, key) {
-          acc[key] = source[key];
-          return acc;
-        }, target);
-      };
-
-      var decode = function(str, decoder, charset) {
-        var strWithoutPlus = str.replace(/\+/g, " ");
-        if (charset === "iso-8859-1") {
-          // unescape never throws, no try...catch needed:
-          return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
-        }
-        // utf-8
-        try {
-          return decodeURIComponent(strWithoutPlus);
-        } catch (e) {
-          return strWithoutPlus;
-        }
-      };
-
-      var encode = function encode(str, defaultEncoder, charset) {
-        // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
-        // It has been adapted here for stricter adherence to RFC 3986
-        if (str.length === 0) {
-          return str;
-        }
-
-        var string = str;
-        if (typeof str === "symbol") {
-          string = Symbol.prototype.toString.call(str);
-        } else if (typeof str !== "string") {
-          string = String(str);
-        }
-
-        if (charset === "iso-8859-1") {
-          return escape(string).replace(/%u[0-9a-f]{4}/gi, function($0) {
-            return "%26%23" + parseInt($0.slice(2), 16) + "%3B";
-          });
-        }
-
-        var out = "";
-        for (var i = 0; i < string.length; ++i) {
-          var c = string.charCodeAt(i);
-
-          if (
-            c === 0x2d || // -
-            c === 0x2e || // .
-            c === 0x5f || // _
-            c === 0x7e || // ~
-            (c >= 0x30 && c <= 0x39) || // 0-9
-            (c >= 0x41 && c <= 0x5a) || // a-z
-            (c >= 0x61 && c <= 0x7a) // A-Z
-          ) {
-            out += string.charAt(i);
-            continue;
-          }
-
-          if (c < 0x80) {
-            out = out + hexTable[c];
-            continue;
-          }
-
-          if (c < 0x800) {
-            out =
-              out + (hexTable[0xc0 | (c >> 6)] + hexTable[0x80 | (c & 0x3f)]);
-            continue;
-          }
-
-          if (c < 0xd800 || c >= 0xe000) {
-            out =
-              out +
-              (hexTable[0xe0 | (c >> 12)] +
-                hexTable[0x80 | ((c >> 6) & 0x3f)] +
-                hexTable[0x80 | (c & 0x3f)]);
-            continue;
-          }
-
-          i += 1;
-          c = 0x10000 + (((c & 0x3ff) << 10) | (string.charCodeAt(i) & 0x3ff));
-          out +=
-            hexTable[0xf0 | (c >> 18)] +
-            hexTable[0x80 | ((c >> 12) & 0x3f)] +
-            hexTable[0x80 | ((c >> 6) & 0x3f)] +
-            hexTable[0x80 | (c & 0x3f)];
-        }
-
-        return out;
-      };
-
-      var compact = function compact(value) {
-        var queue = [{ obj: { o: value }, prop: "o" }];
-        var refs = [];
-
-        for (var i = 0; i < queue.length; ++i) {
-          var item = queue[i];
-          var obj = item.obj[item.prop];
-
-          var keys = Object.keys(obj);
-          for (var j = 0; j < keys.length; ++j) {
-            var key = keys[j];
-            var val = obj[key];
-            if (
-              typeof val === "object" &&
-              val !== null &&
-              refs.indexOf(val) === -1
-            ) {
-              queue.push({ obj: obj, prop: key });
-              refs.push(val);
-            }
-          }
-        }
-
-        compactQueue(queue);
-
-        return value;
-      };
-
-      var isRegExp = function isRegExp(obj) {
-        return Object.prototype.toString.call(obj) === "[object RegExp]";
-      };
-
-      var isBuffer = function isBuffer(obj) {
-        if (!obj || typeof obj !== "object") {
-          return false;
-        }
-
-        return !!(
-          obj.constructor &&
-          obj.constructor.isBuffer &&
-          obj.constructor.isBuffer(obj)
-        );
-      };
-
-      var combine = function combine(a, b) {
-        return [].concat(a, b);
-      };
-
-      module.exports = {
-        arrayToObject: arrayToObject,
-        assign: assign,
-        combine: combine,
-        compact: compact,
-        decode: decode,
-        encode: encode,
-        isBuffer: isBuffer,
-        isRegExp: isRegExp,
-        merge: merge
-      };
-
-      /***/
-    },
-
-    /***/ 517: /***/ function(module, __unusedexports, __webpack_require__) {
-      module.exports = __webpack_require__(232);
-
-      /***/
-    },
-
-    /***/ 565: /***/ function(__unusedmodule, exports, __webpack_require__) {
+    /***/ 538: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
       "use strict";
 
       // Copyright (c) Microsoft. All rights reserved.
@@ -4090,214 +5412,10 @@ module.exports = /******/ (function(modules, runtime) {
           });
         };
       Object.defineProperty(exports, "__esModule", { value: true });
-      const qs = __webpack_require__(467);
-      const url = __webpack_require__(835);
-      const path = __webpack_require__(622);
-      const zlib = __webpack_require__(761);
-      /**
-       * creates an url from a request url and optional base url (http://server:8080)
-       * @param {string} resource - a fully qualified url or relative path
-       * @param {string} baseUrl - an optional baseUrl (http://server:8080)
-       * @param {IRequestOptions} options - an optional options object, could include QueryParameters e.g.
-       * @return {string} - resultant url
-       */
-      function getUrl(resource, baseUrl, queryParams) {
-        const pathApi = path.posix || path;
-        let requestUrl = "";
-        if (!baseUrl) {
-          requestUrl = resource;
-        } else if (!resource) {
-          requestUrl = baseUrl;
-        } else {
-          const base = url.parse(baseUrl);
-          const resultantUrl = url.parse(resource);
-          // resource (specific per request) elements take priority
-          resultantUrl.protocol = resultantUrl.protocol || base.protocol;
-          resultantUrl.auth = resultantUrl.auth || base.auth;
-          resultantUrl.host = resultantUrl.host || base.host;
-          resultantUrl.pathname = pathApi.resolve(
-            base.pathname,
-            resultantUrl.pathname
-          );
-          if (!resultantUrl.pathname.endsWith("/") && resource.endsWith("/")) {
-            resultantUrl.pathname += "/";
-          }
-          requestUrl = url.format(resultantUrl);
-        }
-        return queryParams
-          ? getUrlWithParsedQueryParams(requestUrl, queryParams)
-          : requestUrl;
-      }
-      exports.getUrl = getUrl;
-      /**
-       *
-       * @param {string} requestUrl
-       * @param {IRequestQueryParams} queryParams
-       * @return {string} - Request's URL with Query Parameters appended/parsed.
-       */
-      function getUrlWithParsedQueryParams(requestUrl, queryParams) {
-        const url = requestUrl.replace(/\?$/g, ""); // Clean any extra end-of-string "?" character
-        const parsedQueryParams = qs.stringify(
-          queryParams.params,
-          buildParamsStringifyOptions(queryParams)
-        );
-        return `${url}${parsedQueryParams}`;
-      }
-      /**
-       * Build options for QueryParams Stringifying.
-       *
-       * @param {IRequestQueryParams} queryParams
-       * @return {object}
-       */
-      function buildParamsStringifyOptions(queryParams) {
-        let options = {
-          addQueryPrefix: true,
-          delimiter: (queryParams.options || {}).separator || "&",
-          allowDots: (queryParams.options || {}).shouldAllowDots || false,
-          arrayFormat: (queryParams.options || {}).arrayFormat || "repeat",
-          encodeValuesOnly:
-            (queryParams.options || {}).shouldOnlyEncodeValues || true
-        };
-        return options;
-      }
-      /**
-       * Decompress/Decode gzip encoded JSON
-       * Using Node.js built-in zlib module
-       *
-       * @param {Buffer} buffer
-       * @param {string} charset? - optional; defaults to 'utf-8'
-       * @return {Promise<string>}
-       */
-      function decompressGzippedContent(buffer, charset) {
-        return __awaiter(this, void 0, void 0, function*() {
-          return new Promise((resolve, reject) =>
-            __awaiter(this, void 0, void 0, function*() {
-              zlib.gunzip(buffer, function(error, buffer) {
-                if (error) {
-                  reject(error);
-                }
-                resolve(buffer.toString(charset || "utf-8"));
-              });
-            })
-          );
-        });
-      }
-      exports.decompressGzippedContent = decompressGzippedContent;
-      /**
-       * Obtain Response's Content Charset.
-       * Through inspecting `content-type` response header.
-       * It Returns 'utf-8' if NO charset specified/matched.
-       *
-       * @param {IHttpClientResponse} response
-       * @return {string} - Content Encoding Charset; Default=utf-8
-       */
-      function obtainContentCharset(response) {
-        // Find the charset, if specified.
-        // Search for the `charset=CHARSET` string, not including `;,\r\n`
-        // Example: content-type: 'application/json;charset=utf-8'
-        // |__ matches would be ['charset=utf-8', 'utf-8', index: 18, input: 'application/json; charset=utf-8']
-        // |_____ matches[1] would have the charset :tada: , in our example it's utf-8
-        // However, if the matches Array was empty or no charset found, 'utf-8' would be returned by default.
-        const contentType = response.message.headers["content-type"] || "";
-        const matches = contentType.match(/charset=([^;,\r\n]+)/i);
-        return matches && matches[1] ? matches[1] : "utf-8";
-      }
-      exports.obtainContentCharset = obtainContentCharset;
-
-      /***/
-    },
-
-    /***/ 579: /***/ function(__unusedmodule, exports, __webpack_require__) {
-      "use strict";
-
-      // For internal use, subject to change.
-      var __importStar =
-        (this && this.__importStar) ||
-        function(mod) {
-          if (mod && mod.__esModule) return mod;
-          var result = {};
-          if (mod != null)
-            for (var k in mod)
-              if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-          result["default"] = mod;
-          return result;
-        };
-      Object.defineProperty(exports, "__esModule", { value: true });
-      // We use any as a valid input type
-      /* eslint-disable @typescript-eslint/no-explicit-any */
-      const fs = __importStar(__webpack_require__(747));
-      const os = __importStar(__webpack_require__(87));
-      const utils_1 = __webpack_require__(889);
-      function issueCommand(command, message) {
-        const filePath = process.env[`GITHUB_${command}`];
-        if (!filePath) {
-          throw new Error(
-            `Unable to find environment variable for file command ${command}`
-          );
-        }
-        if (!fs.existsSync(filePath)) {
-          throw new Error(`Missing file at path: ${filePath}`);
-        }
-        fs.appendFileSync(
-          filePath,
-          `${utils_1.toCommandValue(message)}${os.EOL}`,
-          {
-            encoding: "utf8"
-          }
-        );
-      }
-      exports.issueCommand = issueCommand;
-      //# sourceMappingURL=file-command.js.map
-
-      /***/
-    },
-
-    /***/ 605: /***/ function(module) {
-      module.exports = require("http");
-
-      /***/
-    },
-
-    /***/ 609: /***/ function(__unusedmodule, exports, __webpack_require__) {
-      "use strict";
-
-      // Copyright (c) Microsoft. All rights reserved.
-      // Licensed under the MIT license. See LICENSE file in the project root for full license information.
-      var __awaiter =
-        (this && this.__awaiter) ||
-        function(thisArg, _arguments, P, generator) {
-          return new (P || (P = Promise))(function(resolve, reject) {
-            function fulfilled(value) {
-              try {
-                step(generator.next(value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function rejected(value) {
-              try {
-                step(generator["throw"](value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function step(result) {
-              result.done
-                ? resolve(result.value)
-                : new P(function(resolve) {
-                    resolve(result.value);
-                  }).then(fulfilled, rejected);
-            }
-            step(
-              (generator = generator.apply(thisArg, _arguments || [])).next()
-            );
-          });
-        };
-      Object.defineProperty(exports, "__esModule", { value: true });
-      const url = __webpack_require__(835);
-      const http = __webpack_require__(605);
-      const https = __webpack_require__(211);
-      const util = __webpack_require__(565);
+      const url = __nccwpck_require__(835);
+      const http = __nccwpck_require__(605);
+      const https = __nccwpck_require__(211);
+      const util = __nccwpck_require__(470);
       let fs;
       let tunnel;
       var HttpCodes;
@@ -4439,7 +5557,7 @@ module.exports = /******/ (function(modules, runtime) {
             this._certConfig = requestOptions.cert;
             if (this._certConfig) {
               // If using cert, need fs
-              fs = __webpack_require__(747);
+              fs = __nccwpck_require__(747);
               // cache the cert content into memory, so we don't have to read it from disk every time
               if (
                 this._certConfig.caFile &&
@@ -4781,7 +5899,7 @@ module.exports = /******/ (function(modules, runtime) {
           if (useProxy) {
             // If using proxy, need tunnel
             if (!tunnel) {
-              tunnel = __webpack_require__(517);
+              tunnel = __nccwpck_require__(294);
             }
             const agentOptions = {
               maxSockets: maxSockets,
@@ -4892,1208 +6010,230 @@ module.exports = /******/ (function(modules, runtime) {
       /***/
     },
 
-    /***/ 614: /***/ function(module) {
-      module.exports = require("events");
-
-      /***/
-    },
-
-    /***/ 622: /***/ function(module) {
-      module.exports = require("path");
-
-      /***/
-    },
-
-    /***/ 631: /***/ function(module) {
-      module.exports = require("net");
-
-      /***/
-    },
-
-    /***/ 669: /***/ function(module) {
-      module.exports = require("util");
-
-      /***/
-    },
-
-    /***/ 674: /***/ function(module, __unusedexports, __webpack_require__) {
+    /***/ 470: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
       "use strict";
 
-      var utils = __webpack_require__(498);
-      var formats = __webpack_require__(68);
-      var has = Object.prototype.hasOwnProperty;
-
-      var arrayPrefixGenerators = {
-        brackets: function brackets(prefix) {
-          return prefix + "[]";
-        },
-        comma: "comma",
-        indices: function indices(prefix, key) {
-          return prefix + "[" + key + "]";
-        },
-        repeat: function repeat(prefix) {
-          return prefix;
+      // Copyright (c) Microsoft. All rights reserved.
+      // Licensed under the MIT license. See LICENSE file in the project root for full license information.
+      var __awaiter =
+        (this && this.__awaiter) ||
+        function(thisArg, _arguments, P, generator) {
+          return new (P || (P = Promise))(function(resolve, reject) {
+            function fulfilled(value) {
+              try {
+                step(generator.next(value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function rejected(value) {
+              try {
+                step(generator["throw"](value));
+              } catch (e) {
+                reject(e);
+              }
+            }
+            function step(result) {
+              result.done
+                ? resolve(result.value)
+                : new P(function(resolve) {
+                    resolve(result.value);
+                  }).then(fulfilled, rejected);
+            }
+            step(
+              (generator = generator.apply(thisArg, _arguments || [])).next()
+            );
+          });
+        };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      const qs = __nccwpck_require__(760);
+      const url = __nccwpck_require__(835);
+      const path = __nccwpck_require__(622);
+      const zlib = __nccwpck_require__(761);
+      /**
+       * creates an url from a request url and optional base url (http://server:8080)
+       * @param {string} resource - a fully qualified url or relative path
+       * @param {string} baseUrl - an optional baseUrl (http://server:8080)
+       * @param {IRequestOptions} options - an optional options object, could include QueryParameters e.g.
+       * @return {string} - resultant url
+       */
+      function getUrl(resource, baseUrl, queryParams) {
+        const pathApi = path.posix || path;
+        let requestUrl = "";
+        if (!baseUrl) {
+          requestUrl = resource;
+        } else if (!resource) {
+          requestUrl = baseUrl;
+        } else {
+          const base = url.parse(baseUrl);
+          const resultantUrl = url.parse(resource);
+          // resource (specific per request) elements take priority
+          resultantUrl.protocol = resultantUrl.protocol || base.protocol;
+          resultantUrl.auth = resultantUrl.auth || base.auth;
+          resultantUrl.host = resultantUrl.host || base.host;
+          resultantUrl.pathname = pathApi.resolve(
+            base.pathname,
+            resultantUrl.pathname
+          );
+          if (!resultantUrl.pathname.endsWith("/") && resource.endsWith("/")) {
+            resultantUrl.pathname += "/";
+          }
+          requestUrl = url.format(resultantUrl);
         }
-      };
-
-      var isArray = Array.isArray;
-      var push = Array.prototype.push;
-      var pushToArray = function(arr, valueOrArray) {
-        push.apply(arr, isArray(valueOrArray) ? valueOrArray : [valueOrArray]);
-      };
-
-      var toISO = Date.prototype.toISOString;
-
-      var defaultFormat = formats["default"];
-      var defaults = {
-        addQueryPrefix: false,
-        allowDots: false,
-        charset: "utf-8",
-        charsetSentinel: false,
-        delimiter: "&",
-        encode: true,
-        encoder: utils.encode,
-        encodeValuesOnly: false,
-        format: defaultFormat,
-        formatter: formats.formatters[defaultFormat],
-        // deprecated
-        indices: false,
-        serializeDate: function serializeDate(date) {
-          return toISO.call(date);
-        },
-        skipNulls: false,
-        strictNullHandling: false
-      };
-
-      var isNonNullishPrimitive = function isNonNullishPrimitive(v) {
-        return (
-          typeof v === "string" ||
-          typeof v === "number" ||
-          typeof v === "boolean" ||
-          typeof v === "symbol" ||
-          typeof v === "bigint"
+        return queryParams
+          ? getUrlWithParsedQueryParams(requestUrl, queryParams)
+          : requestUrl;
+      }
+      exports.getUrl = getUrl;
+      /**
+       *
+       * @param {string} requestUrl
+       * @param {IRequestQueryParams} queryParams
+       * @return {string} - Request's URL with Query Parameters appended/parsed.
+       */
+      function getUrlWithParsedQueryParams(requestUrl, queryParams) {
+        const url = requestUrl.replace(/\?$/g, ""); // Clean any extra end-of-string "?" character
+        const parsedQueryParams = qs.stringify(
+          queryParams.params,
+          buildParamsStringifyOptions(queryParams)
         );
-      };
-
-      var stringify = function stringify(
-        object,
-        prefix,
-        generateArrayPrefix,
-        strictNullHandling,
-        skipNulls,
-        encoder,
-        filter,
-        sort,
-        allowDots,
-        serializeDate,
-        formatter,
-        encodeValuesOnly,
-        charset
-      ) {
-        var obj = object;
-        if (typeof filter === "function") {
-          obj = filter(prefix, obj);
-        } else if (obj instanceof Date) {
-          obj = serializeDate(obj);
-        } else if (generateArrayPrefix === "comma" && isArray(obj)) {
-          obj = obj.join(",");
-        }
-
-        if (obj === null) {
-          if (strictNullHandling) {
-            return encoder && !encodeValuesOnly
-              ? encoder(prefix, defaults.encoder, charset, "key")
-              : prefix;
-          }
-
-          obj = "";
-        }
-
-        if (isNonNullishPrimitive(obj) || utils.isBuffer(obj)) {
-          if (encoder) {
-            var keyValue = encodeValuesOnly
-              ? prefix
-              : encoder(prefix, defaults.encoder, charset, "key");
-            return [
-              formatter(keyValue) +
-                "=" +
-                formatter(encoder(obj, defaults.encoder, charset, "value"))
-            ];
-          }
-          return [formatter(prefix) + "=" + formatter(String(obj))];
-        }
-
-        var values = [];
-
-        if (typeof obj === "undefined") {
-          return values;
-        }
-
-        var objKeys;
-        if (isArray(filter)) {
-          objKeys = filter;
-        } else {
-          var keys = Object.keys(obj);
-          objKeys = sort ? keys.sort(sort) : keys;
-        }
-
-        for (var i = 0; i < objKeys.length; ++i) {
-          var key = objKeys[i];
-
-          if (skipNulls && obj[key] === null) {
-            continue;
-          }
-
-          if (isArray(obj)) {
-            pushToArray(
-              values,
-              stringify(
-                obj[key],
-                typeof generateArrayPrefix === "function"
-                  ? generateArrayPrefix(prefix, key)
-                  : prefix,
-                generateArrayPrefix,
-                strictNullHandling,
-                skipNulls,
-                encoder,
-                filter,
-                sort,
-                allowDots,
-                serializeDate,
-                formatter,
-                encodeValuesOnly,
-                charset
-              )
-            );
-          } else {
-            pushToArray(
-              values,
-              stringify(
-                obj[key],
-                prefix + (allowDots ? "." + key : "[" + key + "]"),
-                generateArrayPrefix,
-                strictNullHandling,
-                skipNulls,
-                encoder,
-                filter,
-                sort,
-                allowDots,
-                serializeDate,
-                formatter,
-                encodeValuesOnly,
-                charset
-              )
-            );
-          }
-        }
-
-        return values;
-      };
-
-      var normalizeStringifyOptions = function normalizeStringifyOptions(opts) {
-        if (!opts) {
-          return defaults;
-        }
-
-        if (
-          opts.encoder !== null &&
-          opts.encoder !== undefined &&
-          typeof opts.encoder !== "function"
-        ) {
-          throw new TypeError("Encoder has to be a function.");
-        }
-
-        var charset = opts.charset || defaults.charset;
-        if (
-          typeof opts.charset !== "undefined" &&
-          opts.charset !== "utf-8" &&
-          opts.charset !== "iso-8859-1"
-        ) {
-          throw new TypeError(
-            "The charset option must be either utf-8, iso-8859-1, or undefined"
-          );
-        }
-
-        var format = formats["default"];
-        if (typeof opts.format !== "undefined") {
-          if (!has.call(formats.formatters, opts.format)) {
-            throw new TypeError("Unknown format option provided.");
-          }
-          format = opts.format;
-        }
-        var formatter = formats.formatters[format];
-
-        var filter = defaults.filter;
-        if (typeof opts.filter === "function" || isArray(opts.filter)) {
-          filter = opts.filter;
-        }
-
-        return {
-          addQueryPrefix:
-            typeof opts.addQueryPrefix === "boolean"
-              ? opts.addQueryPrefix
-              : defaults.addQueryPrefix,
-          allowDots:
-            typeof opts.allowDots === "undefined"
-              ? defaults.allowDots
-              : !!opts.allowDots,
-          charset: charset,
-          charsetSentinel:
-            typeof opts.charsetSentinel === "boolean"
-              ? opts.charsetSentinel
-              : defaults.charsetSentinel,
-          delimiter:
-            typeof opts.delimiter === "undefined"
-              ? defaults.delimiter
-              : opts.delimiter,
-          encode:
-            typeof opts.encode === "boolean" ? opts.encode : defaults.encode,
-          encoder:
-            typeof opts.encoder === "function"
-              ? opts.encoder
-              : defaults.encoder,
+        return `${url}${parsedQueryParams}`;
+      }
+      /**
+       * Build options for QueryParams Stringifying.
+       *
+       * @param {IRequestQueryParams} queryParams
+       * @return {object}
+       */
+      function buildParamsStringifyOptions(queryParams) {
+        let options = {
+          addQueryPrefix: true,
+          delimiter: (queryParams.options || {}).separator || "&",
+          allowDots: (queryParams.options || {}).shouldAllowDots || false,
+          arrayFormat: (queryParams.options || {}).arrayFormat || "repeat",
           encodeValuesOnly:
-            typeof opts.encodeValuesOnly === "boolean"
-              ? opts.encodeValuesOnly
-              : defaults.encodeValuesOnly,
-          filter: filter,
-          formatter: formatter,
-          serializeDate:
-            typeof opts.serializeDate === "function"
-              ? opts.serializeDate
-              : defaults.serializeDate,
-          skipNulls:
-            typeof opts.skipNulls === "boolean"
-              ? opts.skipNulls
-              : defaults.skipNulls,
-          sort: typeof opts.sort === "function" ? opts.sort : null,
-          strictNullHandling:
-            typeof opts.strictNullHandling === "boolean"
-              ? opts.strictNullHandling
-              : defaults.strictNullHandling
+            (queryParams.options || {}).shouldOnlyEncodeValues || true
         };
-      };
-
-      module.exports = function(object, opts) {
-        var obj = object;
-        var options = normalizeStringifyOptions(opts);
-
-        var objKeys;
-        var filter;
-
-        if (typeof options.filter === "function") {
-          filter = options.filter;
-          obj = filter("", obj);
-        } else if (isArray(options.filter)) {
-          filter = options.filter;
-          objKeys = filter;
-        }
-
-        var keys = [];
-
-        if (typeof obj !== "object" || obj === null) {
-          return "";
-        }
-
-        var arrayFormat;
-        if (opts && opts.arrayFormat in arrayPrefixGenerators) {
-          arrayFormat = opts.arrayFormat;
-        } else if (opts && "indices" in opts) {
-          arrayFormat = opts.indices ? "indices" : "repeat";
-        } else {
-          arrayFormat = "indices";
-        }
-
-        var generateArrayPrefix = arrayPrefixGenerators[arrayFormat];
-
-        if (!objKeys) {
-          objKeys = Object.keys(obj);
-        }
-
-        if (options.sort) {
-          objKeys.sort(options.sort);
-        }
-
-        for (var i = 0; i < objKeys.length; ++i) {
-          var key = objKeys[i];
-
-          if (options.skipNulls && obj[key] === null) {
-            continue;
-          }
-          pushToArray(
-            keys,
-            stringify(
-              obj[key],
-              key,
-              generateArrayPrefix,
-              options.strictNullHandling,
-              options.skipNulls,
-              options.encode ? options.encoder : null,
-              options.filter,
-              options.sort,
-              options.allowDots,
-              options.serializeDate,
-              options.formatter,
-              options.encodeValuesOnly,
-              options.charset
-            )
-          );
-        }
-
-        var joined = keys.join(options.delimiter);
-        var prefix = options.addQueryPrefix === true ? "?" : "";
-
-        if (options.charsetSentinel) {
-          if (options.charset === "iso-8859-1") {
-            // encodeURIComponent('&#10003;'), the "numeric entity" representation of a checkmark
-            prefix += "utf8=%26%2310003%3B&";
-          } else {
-            // encodeURIComponent('✓')
-            prefix += "utf8=%E2%9C%93&";
-          }
-        }
-
-        return joined.length > 0 ? prefix + joined : "";
-      };
-
-      /***/
-    },
-
-    /***/ 682: /***/ function(__unusedmodule, exports, __webpack_require__) {
-      "use strict";
-
-      var __awaiter =
-        (this && this.__awaiter) ||
-        function(thisArg, _arguments, P, generator) {
-          function adopt(value) {
-            return value instanceof P
-              ? value
-              : new P(function(resolve) {
-                  resolve(value);
-                });
-          }
-          return new (P || (P = Promise))(function(resolve, reject) {
-            function fulfilled(value) {
-              try {
-                step(generator.next(value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function rejected(value) {
-              try {
-                step(generator["throw"](value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function step(result) {
-              result.done
-                ? resolve(result.value)
-                : adopt(result.value).then(fulfilled, rejected);
-            }
-            step(
-              (generator = generator.apply(thisArg, _arguments || [])).next()
-            );
-          });
-        };
-      Object.defineProperty(exports, "__esModule", { value: true });
-      const childProcess = __webpack_require__(129);
-      const path = __webpack_require__(622);
-      const util_1 = __webpack_require__(669);
-      const ioUtil = __webpack_require__(308);
-      const exec = util_1.promisify(childProcess.exec);
-      /**
-       * Copies a file or folder.
-       * Based off of shelljs - https://github.com/shelljs/shelljs/blob/9237f66c52e5daa40458f94f9565e18e8132f5a6/src/cp.js
-       *
-       * @param     source    source path
-       * @param     dest      destination path
-       * @param     options   optional. See CopyOptions.
-       */
-      function cp(source, dest, options = {}) {
-        return __awaiter(this, void 0, void 0, function*() {
-          const { force, recursive } = readCopyOptions(options);
-          const destStat = (yield ioUtil.exists(dest))
-            ? yield ioUtil.stat(dest)
-            : null;
-          // Dest is an existing file, but not forcing
-          if (destStat && destStat.isFile() && !force) {
-            return;
-          }
-          // If dest is an existing directory, should copy inside.
-          const newDest =
-            destStat && destStat.isDirectory()
-              ? path.join(dest, path.basename(source))
-              : dest;
-          if (!(yield ioUtil.exists(source))) {
-            throw new Error(`no such file or directory: ${source}`);
-          }
-          const sourceStat = yield ioUtil.stat(source);
-          if (sourceStat.isDirectory()) {
-            if (!recursive) {
-              throw new Error(
-                `Failed to copy. ${source} is a directory, but tried to copy without recursive flag.`
-              );
-            } else {
-              yield cpDirRecursive(source, newDest, 0, force);
-            }
-          } else {
-            if (path.relative(source, newDest) === "") {
-              // a file cannot be copied to itself
-              throw new Error(`'${newDest}' and '${source}' are the same file`);
-            }
-            yield copyFile(source, newDest, force);
-          }
-        });
-      }
-      exports.cp = cp;
-      /**
-       * Moves a path.
-       *
-       * @param     source    source path
-       * @param     dest      destination path
-       * @param     options   optional. See MoveOptions.
-       */
-      function mv(source, dest, options = {}) {
-        return __awaiter(this, void 0, void 0, function*() {
-          if (yield ioUtil.exists(dest)) {
-            let destExists = true;
-            if (yield ioUtil.isDirectory(dest)) {
-              // If dest is directory copy src into dest
-              dest = path.join(dest, path.basename(source));
-              destExists = yield ioUtil.exists(dest);
-            }
-            if (destExists) {
-              if (options.force == null || options.force) {
-                yield rmRF(dest);
-              } else {
-                throw new Error("Destination already exists");
-              }
-            }
-          }
-          yield mkdirP(path.dirname(dest));
-          yield ioUtil.rename(source, dest);
-        });
-      }
-      exports.mv = mv;
-      /**
-       * Remove a path recursively with force
-       *
-       * @param inputPath path to remove
-       */
-      function rmRF(inputPath) {
-        return __awaiter(this, void 0, void 0, function*() {
-          if (ioUtil.IS_WINDOWS) {
-            // Node doesn't provide a delete operation, only an unlink function. This means that if the file is being used by another
-            // program (e.g. antivirus), it won't be deleted. To address this, we shell out the work to rd/del.
-            try {
-              if (yield ioUtil.isDirectory(inputPath, true)) {
-                yield exec(`rd /s /q "${inputPath}"`);
-              } else {
-                yield exec(`del /f /a "${inputPath}"`);
-              }
-            } catch (err) {
-              // if you try to delete a file that doesn't exist, desired result is achieved
-              // other errors are valid
-              if (err.code !== "ENOENT") throw err;
-            }
-            // Shelling out fails to remove a symlink folder with missing source, this unlink catches that
-            try {
-              yield ioUtil.unlink(inputPath);
-            } catch (err) {
-              // if you try to delete a file that doesn't exist, desired result is achieved
-              // other errors are valid
-              if (err.code !== "ENOENT") throw err;
-            }
-          } else {
-            let isDir = false;
-            try {
-              isDir = yield ioUtil.isDirectory(inputPath);
-            } catch (err) {
-              // if you try to delete a file that doesn't exist, desired result is achieved
-              // other errors are valid
-              if (err.code !== "ENOENT") throw err;
-              return;
-            }
-            if (isDir) {
-              yield exec(`rm -rf "${inputPath}"`);
-            } else {
-              yield ioUtil.unlink(inputPath);
-            }
-          }
-        });
-      }
-      exports.rmRF = rmRF;
-      /**
-       * Make a directory.  Creates the full path with folders in between
-       * Will throw if it fails
-       *
-       * @param   fsPath        path to create
-       * @returns Promise<void>
-       */
-      function mkdirP(fsPath) {
-        return __awaiter(this, void 0, void 0, function*() {
-          yield ioUtil.mkdirP(fsPath);
-        });
-      }
-      exports.mkdirP = mkdirP;
-      /**
-       * Returns path of a tool had the tool actually been invoked.  Resolves via paths.
-       * If you check and the tool does not exist, it will throw.
-       *
-       * @param     tool              name of the tool
-       * @param     check             whether to check if tool exists
-       * @returns   Promise<string>   path to tool
-       */
-      function which(tool, check) {
-        return __awaiter(this, void 0, void 0, function*() {
-          if (!tool) {
-            throw new Error("parameter 'tool' is required");
-          }
-          // recursive when check=true
-          if (check) {
-            const result = yield which(tool, false);
-            if (!result) {
-              if (ioUtil.IS_WINDOWS) {
-                throw new Error(
-                  `Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also verify the file has a valid extension for an executable file.`
-                );
-              } else {
-                throw new Error(
-                  `Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.`
-                );
-              }
-            }
-          }
-          try {
-            // build the list of extensions to try
-            const extensions = [];
-            if (ioUtil.IS_WINDOWS && process.env.PATHEXT) {
-              for (const extension of process.env.PATHEXT.split(
-                path.delimiter
-              )) {
-                if (extension) {
-                  extensions.push(extension);
-                }
-              }
-            }
-            // if it's rooted, return it if exists. otherwise return empty.
-            if (ioUtil.isRooted(tool)) {
-              const filePath = yield ioUtil.tryGetExecutablePath(
-                tool,
-                extensions
-              );
-              if (filePath) {
-                return filePath;
-              }
-              return "";
-            }
-            // if any path separators, return empty
-            if (
-              tool.includes("/") ||
-              (ioUtil.IS_WINDOWS && tool.includes("\\"))
-            ) {
-              return "";
-            }
-            // build the list of directories
-            //
-            // Note, technically "where" checks the current directory on Windows. From a toolkit perspective,
-            // it feels like we should not do this. Checking the current directory seems like more of a use
-            // case of a shell, and the which() function exposed by the toolkit should strive for consistency
-            // across platforms.
-            const directories = [];
-            if (process.env.PATH) {
-              for (const p of process.env.PATH.split(path.delimiter)) {
-                if (p) {
-                  directories.push(p);
-                }
-              }
-            }
-            // return the first match
-            for (const directory of directories) {
-              const filePath = yield ioUtil.tryGetExecutablePath(
-                directory + path.sep + tool,
-                extensions
-              );
-              if (filePath) {
-                return filePath;
-              }
-            }
-            return "";
-          } catch (err) {
-            throw new Error(`which failed with message ${err.message}`);
-          }
-        });
-      }
-      exports.which = which;
-      function readCopyOptions(options) {
-        const force = options.force == null ? true : options.force;
-        const recursive = Boolean(options.recursive);
-        return { force, recursive };
-      }
-      function cpDirRecursive(sourceDir, destDir, currentDepth, force) {
-        return __awaiter(this, void 0, void 0, function*() {
-          // Ensure there is not a run away recursive copy
-          if (currentDepth >= 255) return;
-          currentDepth++;
-          yield mkdirP(destDir);
-          const files = yield ioUtil.readdir(sourceDir);
-          for (const fileName of files) {
-            const srcFile = `${sourceDir}/${fileName}`;
-            const destFile = `${destDir}/${fileName}`;
-            const srcFileStat = yield ioUtil.lstat(srcFile);
-            if (srcFileStat.isDirectory()) {
-              // Recurse
-              yield cpDirRecursive(srcFile, destFile, currentDepth, force);
-            } else {
-              yield copyFile(srcFile, destFile, force);
-            }
-          }
-          // Change the mode for the newly created directory
-          yield ioUtil.chmod(destDir, (yield ioUtil.stat(sourceDir)).mode);
-        });
-      }
-      // Buffered file copy
-      function copyFile(srcFile, destFile, force) {
-        return __awaiter(this, void 0, void 0, function*() {
-          if ((yield ioUtil.lstat(srcFile)).isSymbolicLink()) {
-            // unlink/re-link it
-            try {
-              yield ioUtil.lstat(destFile);
-              yield ioUtil.unlink(destFile);
-            } catch (e) {
-              // Try to override file permission
-              if (e.code === "EPERM") {
-                yield ioUtil.chmod(destFile, "0666");
-                yield ioUtil.unlink(destFile);
-              }
-              // other errors = it doesn't exist, no work to do
-            }
-            // Copy over symlink
-            const symlinkFull = yield ioUtil.readlink(srcFile);
-            yield ioUtil.symlink(
-              symlinkFull,
-              destFile,
-              ioUtil.IS_WINDOWS ? "junction" : null
-            );
-          } else if (!(yield ioUtil.exists(destFile)) || force) {
-            yield ioUtil.copyFile(srcFile, destFile);
-          }
-        });
-      }
-      //# sourceMappingURL=io.js.map
-
-      /***/
-    },
-
-    /***/ 700: /***/ function(__unusedmodule, exports, __webpack_require__) {
-      "use strict";
-
-      var __awaiter =
-        (this && this.__awaiter) ||
-        function(thisArg, _arguments, P, generator) {
-          function adopt(value) {
-            return value instanceof P
-              ? value
-              : new P(function(resolve) {
-                  resolve(value);
-                });
-          }
-          return new (P || (P = Promise))(function(resolve, reject) {
-            function fulfilled(value) {
-              try {
-                step(generator.next(value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function rejected(value) {
-              try {
-                step(generator["throw"](value));
-              } catch (e) {
-                reject(e);
-              }
-            }
-            function step(result) {
-              result.done
-                ? resolve(result.value)
-                : adopt(result.value).then(fulfilled, rejected);
-            }
-            step(
-              (generator = generator.apply(thisArg, _arguments || [])).next()
-            );
-          });
-        };
-      Object.defineProperty(exports, "__esModule", { value: true });
-      const core = __webpack_require__(33);
-      const io = __webpack_require__(682);
-      const fs = __webpack_require__(747);
-      const os = __webpack_require__(87);
-      const path = __webpack_require__(622);
-      const httpm = __webpack_require__(609);
-      const semver = __webpack_require__(105);
-      const uuidV4 = __webpack_require__(870);
-      const exec_1 = __webpack_require__(942);
-      const assert_1 = __webpack_require__(357);
-      class HTTPError extends Error {
-        constructor(httpStatusCode) {
-          super(`Unexpected HTTP response: ${httpStatusCode}`);
-          this.httpStatusCode = httpStatusCode;
-          Object.setPrototypeOf(this, new.target.prototype);
-        }
-      }
-      exports.HTTPError = HTTPError;
-      const IS_WINDOWS = process.platform === "win32";
-      const userAgent = "actions/tool-cache";
-      // On load grab temp directory and cache directory and remove them from env (currently don't want to expose this)
-      let tempDirectory = process.env["RUNNER_TEMP"] || "";
-      let cacheRoot = process.env["RUNNER_TOOL_CACHE"] || "";
-      // If directories not found, place them in common temp locations
-      if (!tempDirectory || !cacheRoot) {
-        let baseLocation;
-        if (IS_WINDOWS) {
-          // On windows use the USERPROFILE env variable
-          baseLocation = process.env["USERPROFILE"] || "C:\\";
-        } else {
-          if (process.platform === "darwin") {
-            baseLocation = "/Users";
-          } else {
-            baseLocation = "/home";
-          }
-        }
-        if (!tempDirectory) {
-          tempDirectory = path.join(baseLocation, "actions", "temp");
-        }
-        if (!cacheRoot) {
-          cacheRoot = path.join(baseLocation, "actions", "cache");
-        }
+        return options;
       }
       /**
-       * Download a tool from an url and stream it into a file
+       * Decompress/Decode gzip encoded JSON
+       * Using Node.js built-in zlib module
        *
-       * @param url       url of tool to download
-       * @returns         path to downloaded tool
+       * @param {Buffer} buffer
+       * @param {string} charset? - optional; defaults to 'utf-8'
+       * @return {Promise<string>}
        */
-      function downloadTool(url) {
+      function decompressGzippedContent(buffer, charset) {
         return __awaiter(this, void 0, void 0, function*() {
-          // Wrap in a promise so that we can resolve from within stream callbacks
           return new Promise((resolve, reject) =>
             __awaiter(this, void 0, void 0, function*() {
-              try {
-                const http = new httpm.HttpClient(userAgent, [], {
-                  allowRetries: true,
-                  maxRetries: 3
-                });
-                const destPath = path.join(tempDirectory, uuidV4());
-                yield io.mkdirP(tempDirectory);
-                core.debug(`Downloading ${url}`);
-                core.debug(`Downloading ${destPath}`);
-                if (fs.existsSync(destPath)) {
-                  throw new Error(
-                    `Destination file path ${destPath} already exists`
-                  );
+              zlib.gunzip(buffer, function(error, buffer) {
+                if (error) {
+                  reject(error);
                 }
-                const response = yield http.get(url);
-                if (response.message.statusCode !== 200) {
-                  const err = new HTTPError(response.message.statusCode);
-                  core.debug(
-                    `Failed to download from "${url}". Code(${response.message.statusCode}) Message(${response.message.statusMessage})`
-                  );
-                  throw err;
-                }
-                const file = fs.createWriteStream(destPath);
-                file.on("open", () =>
-                  __awaiter(this, void 0, void 0, function*() {
-                    try {
-                      const stream = response.message.pipe(file);
-                      stream.on("close", () => {
-                        core.debug("download complete");
-                        resolve(destPath);
-                      });
-                    } catch (err) {
-                      core.debug(
-                        `Failed to download from "${url}". Code(${response.message.statusCode}) Message(${response.message.statusMessage})`
-                      );
-                      reject(err);
-                    }
-                  })
-                );
-                file.on("error", err => {
-                  file.end();
-                  reject(err);
-                });
-              } catch (err) {
-                reject(err);
-              }
+                resolve(buffer.toString(charset || "utf-8"));
+              });
             })
           );
         });
       }
-      exports.downloadTool = downloadTool;
+      exports.decompressGzippedContent = decompressGzippedContent;
       /**
-       * Extract a .7z file
+       * Obtain Response's Content Charset.
+       * Through inspecting `content-type` response header.
+       * It Returns 'utf-8' if NO charset specified/matched.
        *
-       * @param file     path to the .7z file
-       * @param dest     destination directory. Optional.
-       * @param _7zPath  path to 7zr.exe. Optional, for long path support. Most .7z archives do not have this
-       * problem. If your .7z archive contains very long paths, you can pass the path to 7zr.exe which will
-       * gracefully handle long paths. By default 7zdec.exe is used because it is a very small program and is
-       * bundled with the tool lib. However it does not support long paths. 7zr.exe is the reduced command line
-       * interface, it is smaller than the full command line interface, and it does support long paths. At the
-       * time of this writing, it is freely available from the LZMA SDK that is available on the 7zip website.
-       * Be sure to check the current license agreement. If 7zr.exe is bundled with your action, then the path
-       * to 7zr.exe can be pass to this function.
-       * @returns        path to the destination directory
+       * @param {IHttpClientResponse} response
+       * @return {string} - Content Encoding Charset; Default=utf-8
        */
-      function extract7z(file, dest, _7zPath) {
-        return __awaiter(this, void 0, void 0, function*() {
-          assert_1.ok(IS_WINDOWS, "extract7z() not supported on current OS");
-          assert_1.ok(file, 'parameter "file" is required');
-          dest = dest || (yield _createExtractFolder(dest));
-          const originalCwd = process.cwd();
-          process.chdir(dest);
-          if (_7zPath) {
-            try {
-              const args = ["x", "-bb1", "-bd", "-sccUTF-8", file];
-              const options = {
-                silent: true
-              };
-              yield exec_1.exec(`"${_7zPath}"`, args, options);
-            } finally {
-              process.chdir(originalCwd);
-            }
-          } else {
-            const escapedScript = path
-              .join(__dirname, "..", "scripts", "Invoke-7zdec.ps1")
-              .replace(/'/g, "''")
-              .replace(/"|\n|\r/g, ""); // double-up single quotes, remove double quotes and newlines
-            const escapedFile = file
-              .replace(/'/g, "''")
-              .replace(/"|\n|\r/g, "");
-            const escapedTarget = dest
-              .replace(/'/g, "''")
-              .replace(/"|\n|\r/g, "");
-            const command = `& '${escapedScript}' -Source '${escapedFile}' -Target '${escapedTarget}'`;
-            const args = [
-              "-NoLogo",
-              "-Sta",
-              "-NoProfile",
-              "-NonInteractive",
-              "-ExecutionPolicy",
-              "Unrestricted",
-              "-Command",
-              command
-            ];
-            const options = {
-              silent: true
-            };
-            try {
-              const powershellPath = yield io.which("powershell", true);
-              yield exec_1.exec(`"${powershellPath}"`, args, options);
-            } finally {
-              process.chdir(originalCwd);
-            }
-          }
-          return dest;
-        });
+      function obtainContentCharset(response) {
+        // Find the charset, if specified.
+        // Search for the `charset=CHARSET` string, not including `;,\r\n`
+        // Example: content-type: 'application/json;charset=utf-8'
+        // |__ matches would be ['charset=utf-8', 'utf-8', index: 18, input: 'application/json; charset=utf-8']
+        // |_____ matches[1] would have the charset :tada: , in our example it's utf-8
+        // However, if the matches Array was empty or no charset found, 'utf-8' would be returned by default.
+        const contentType = response.message.headers["content-type"] || "";
+        const matches = contentType.match(/charset=([^;,\r\n]+)/i);
+        return matches && matches[1] ? matches[1] : "utf-8";
       }
-      exports.extract7z = extract7z;
-      /**
-       * Extract a tar
-       *
-       * @param file     path to the tar
-       * @param dest     destination directory. Optional.
-       * @param flags    flags for the tar. Optional.
-       * @returns        path to the destination directory
-       */
-      function extractTar(file, dest, flags = "xz") {
-        return __awaiter(this, void 0, void 0, function*() {
-          if (!file) {
-            throw new Error("parameter 'file' is required");
-          }
-          dest = dest || (yield _createExtractFolder(dest));
-          const tarPath = yield io.which("tar", true);
-          yield exec_1.exec(`"${tarPath}"`, [flags, "-C", dest, "-f", file]);
-          return dest;
-        });
-      }
-      exports.extractTar = extractTar;
-      /**
-       * Extract a zip
-       *
-       * @param file     path to the zip
-       * @param dest     destination directory. Optional.
-       * @returns        path to the destination directory
-       */
-      function extractZip(file, dest) {
-        return __awaiter(this, void 0, void 0, function*() {
-          if (!file) {
-            throw new Error("parameter 'file' is required");
-          }
-          dest = dest || (yield _createExtractFolder(dest));
-          if (IS_WINDOWS) {
-            yield extractZipWin(file, dest);
-          } else {
-            yield extractZipNix(file, dest);
-          }
-          return dest;
-        });
-      }
-      exports.extractZip = extractZip;
-      function extractZipWin(file, dest) {
-        return __awaiter(this, void 0, void 0, function*() {
-          // build the powershell command
-          const escapedFile = file.replace(/'/g, "''").replace(/"|\n|\r/g, ""); // double-up single quotes, remove double quotes and newlines
-          const escapedDest = dest.replace(/'/g, "''").replace(/"|\n|\r/g, "");
-          const command = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
-          // run powershell
-          const powershellPath = yield io.which("powershell");
-          const args = [
-            "-NoLogo",
-            "-Sta",
-            "-NoProfile",
-            "-NonInteractive",
-            "-ExecutionPolicy",
-            "Unrestricted",
-            "-Command",
-            command
-          ];
-          yield exec_1.exec(`"${powershellPath}"`, args);
-        });
-      }
-      function extractZipNix(file, dest) {
-        return __awaiter(this, void 0, void 0, function*() {
-          const unzipPath = yield io.which("unzip");
-          yield exec_1.exec(`"${unzipPath}"`, [file], { cwd: dest });
-        });
-      }
-      /**
-       * Caches a directory and installs it into the tool cacheDir
-       *
-       * @param sourceDir    the directory to cache into tools
-       * @param tool          tool name
-       * @param version       version of the tool.  semver format
-       * @param arch          architecture of the tool.  Optional.  Defaults to machine architecture
-       */
-      function cacheDir(sourceDir, tool, version, arch) {
-        return __awaiter(this, void 0, void 0, function*() {
-          version = semver.clean(version) || version;
-          arch = arch || os.arch();
-          core.debug(`Caching tool ${tool} ${version} ${arch}`);
-          core.debug(`source dir: ${sourceDir}`);
-          if (!fs.statSync(sourceDir).isDirectory()) {
-            throw new Error("sourceDir is not a directory");
-          }
-          // Create the tool dir
-          const destPath = yield _createToolPath(tool, version, arch);
-          // copy each child item. do not move. move can fail on Windows
-          // due to anti-virus software having an open handle on a file.
-          for (const itemName of fs.readdirSync(sourceDir)) {
-            const s = path.join(sourceDir, itemName);
-            yield io.cp(s, destPath, { recursive: true });
-          }
-          // write .complete
-          _completeToolPath(tool, version, arch);
-          return destPath;
-        });
-      }
-      exports.cacheDir = cacheDir;
-      /**
-       * Caches a downloaded file (GUID) and installs it
-       * into the tool cache with a given targetName
-       *
-       * @param sourceFile    the file to cache into tools.  Typically a result of downloadTool which is a guid.
-       * @param targetFile    the name of the file name in the tools directory
-       * @param tool          tool name
-       * @param version       version of the tool.  semver format
-       * @param arch          architecture of the tool.  Optional.  Defaults to machine architecture
-       */
-      function cacheFile(sourceFile, targetFile, tool, version, arch) {
-        return __awaiter(this, void 0, void 0, function*() {
-          version = semver.clean(version) || version;
-          arch = arch || os.arch();
-          core.debug(`Caching tool ${tool} ${version} ${arch}`);
-          core.debug(`source file: ${sourceFile}`);
-          if (!fs.statSync(sourceFile).isFile()) {
-            throw new Error("sourceFile is not a file");
-          }
-          // create the tool dir
-          const destFolder = yield _createToolPath(tool, version, arch);
-          // copy instead of move. move can fail on Windows due to
-          // anti-virus software having an open handle on a file.
-          const destPath = path.join(destFolder, targetFile);
-          core.debug(`destination file ${destPath}`);
-          yield io.cp(sourceFile, destPath);
-          // write .complete
-          _completeToolPath(tool, version, arch);
-          return destFolder;
-        });
-      }
-      exports.cacheFile = cacheFile;
-      /**
-       * Finds the path to a tool version in the local installed tool cache
-       *
-       * @param toolName      name of the tool
-       * @param versionSpec   version of the tool
-       * @param arch          optional arch.  defaults to arch of computer
-       */
-      function find(toolName, versionSpec, arch) {
-        if (!toolName) {
-          throw new Error("toolName parameter is required");
-        }
-        if (!versionSpec) {
-          throw new Error("versionSpec parameter is required");
-        }
-        arch = arch || os.arch();
-        // attempt to resolve an explicit version
-        if (!_isExplicitVersion(versionSpec)) {
-          const localVersions = findAllVersions(toolName, arch);
-          const match = _evaluateVersions(localVersions, versionSpec);
-          versionSpec = match;
-        }
-        // check for the explicit version in the cache
-        let toolPath = "";
-        if (versionSpec) {
-          versionSpec = semver.clean(versionSpec) || "";
-          const cachePath = path.join(cacheRoot, toolName, versionSpec, arch);
-          core.debug(`checking cache: ${cachePath}`);
-          if (
-            fs.existsSync(cachePath) &&
-            fs.existsSync(`${cachePath}.complete`)
-          ) {
-            core.debug(
-              `Found tool in cache ${toolName} ${versionSpec} ${arch}`
-            );
-            toolPath = cachePath;
-          } else {
-            core.debug("not found");
-          }
-        }
-        return toolPath;
-      }
-      exports.find = find;
-      /**
-       * Finds the paths to all versions of a tool that are installed in the local tool cache
-       *
-       * @param toolName  name of the tool
-       * @param arch      optional arch.  defaults to arch of computer
-       */
-      function findAllVersions(toolName, arch) {
-        const versions = [];
-        arch = arch || os.arch();
-        const toolPath = path.join(cacheRoot, toolName);
-        if (fs.existsSync(toolPath)) {
-          const children = fs.readdirSync(toolPath);
-          for (const child of children) {
-            if (_isExplicitVersion(child)) {
-              const fullPath = path.join(toolPath, child, arch || "");
-              if (
-                fs.existsSync(fullPath) &&
-                fs.existsSync(`${fullPath}.complete`)
-              ) {
-                versions.push(child);
-              }
-            }
-          }
-        }
-        return versions;
-      }
-      exports.findAllVersions = findAllVersions;
-      function _createExtractFolder(dest) {
-        return __awaiter(this, void 0, void 0, function*() {
-          if (!dest) {
-            // create a temp dir
-            dest = path.join(tempDirectory, uuidV4());
-          }
-          yield io.mkdirP(dest);
-          return dest;
-        });
-      }
-      function _createToolPath(tool, version, arch) {
-        return __awaiter(this, void 0, void 0, function*() {
-          const folderPath = path.join(
-            cacheRoot,
-            tool,
-            semver.clean(version) || version,
-            arch || ""
-          );
-          core.debug(`destination ${folderPath}`);
-          const markerPath = `${folderPath}.complete`;
-          yield io.rmRF(folderPath);
-          yield io.rmRF(markerPath);
-          yield io.mkdirP(folderPath);
-          return folderPath;
-        });
-      }
-      function _completeToolPath(tool, version, arch) {
-        const folderPath = path.join(
-          cacheRoot,
-          tool,
-          semver.clean(version) || version,
-          arch || ""
-        );
-        const markerPath = `${folderPath}.complete`;
-        fs.writeFileSync(markerPath, "");
-        core.debug("finished caching tool");
-      }
-      function _isExplicitVersion(versionSpec) {
-        const c = semver.clean(versionSpec) || "";
-        core.debug(`isExplicit: ${c}`);
-        const valid = semver.valid(c) != null;
-        core.debug(`explicit? ${valid}`);
-        return valid;
-      }
-      function _evaluateVersions(versions, versionSpec) {
-        let version = "";
-        core.debug(`evaluating ${versions.length} versions`);
-        versions = versions.sort((a, b) => {
-          if (semver.gt(a, b)) {
-            return 1;
-          }
-          return -1;
-        });
-        for (let i = versions.length - 1; i >= 0; i--) {
-          const potential = versions[i];
-          const satisfied = semver.satisfies(potential, versionSpec);
-          if (satisfied) {
-            version = potential;
-            break;
-          }
-        }
-        if (version) {
-          core.debug(`matched: ${version}`);
-        } else {
-          core.debug("match not found");
-        }
-        return version;
-      }
-      //# sourceMappingURL=tool-cache.js.map
+      exports.obtainContentCharset = obtainContentCharset;
 
       /***/
     },
 
-    /***/ 747: /***/ function(module) {
-      module.exports = require("fs");
+    /***/ 707: /***/ module => {
+      /**
+       * Convert array of 16 byte values to UUID string format of the form:
+       * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+       */
+      var byteToHex = [];
+      for (var i = 0; i < 256; ++i) {
+        byteToHex[i] = (i + 0x100).toString(16).substr(1);
+      }
+
+      function bytesToUuid(buf, offset) {
+        var i = offset || 0;
+        var bth = byteToHex;
+        // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+        return [
+          bth[buf[i++]],
+          bth[buf[i++]],
+          bth[buf[i++]],
+          bth[buf[i++]],
+          "-",
+          bth[buf[i++]],
+          bth[buf[i++]],
+          "-",
+          bth[buf[i++]],
+          bth[buf[i++]],
+          "-",
+          bth[buf[i++]],
+          bth[buf[i++]],
+          "-",
+          bth[buf[i++]],
+          bth[buf[i++]],
+          bth[buf[i++]],
+          bth[buf[i++]],
+          bth[buf[i++]],
+          bth[buf[i++]]
+        ].join("");
+      }
+
+      module.exports = bytesToUuid;
 
       /***/
     },
 
-    /***/ 761: /***/ function(module) {
-      module.exports = require("zlib");
+    /***/ 859: /***/ (
+      module,
+      __unused_webpack_exports,
+      __nccwpck_require__
+    ) => {
+      // Unique ID creation requires a high quality random # generator.  In node.js
+      // this is pretty straight-forward - we use the crypto API.
+
+      var crypto = __nccwpck_require__(417);
+
+      module.exports = function nodeRNG() {
+        return crypto.randomBytes(16);
+      };
 
       /***/
     },
 
-    /***/ 835: /***/ function(module) {
-      module.exports = require("url");
-
-      /***/
-    },
-
-    /***/ 870: /***/ function(module, __unusedexports, __webpack_require__) {
-      var rng = __webpack_require__(219);
-      var bytesToUuid = __webpack_require__(975);
+    /***/ 824: /***/ (
+      module,
+      __unused_webpack_exports,
+      __nccwpck_require__
+    ) => {
+      var rng = __nccwpck_require__(859);
+      var bytesToUuid = __nccwpck_require__(707);
 
       function v4(options, buf, offset) {
         var i = (buf && offset) || 0;
@@ -6125,121 +6265,11 @@ module.exports = /******/ (function(modules, runtime) {
       /***/
     },
 
-    /***/ 889: /***/ function(__unusedmodule, exports) {
-      "use strict";
-
-      // We use any as a valid input type
-      /* eslint-disable @typescript-eslint/no-explicit-any */
-      Object.defineProperty(exports, "__esModule", { value: true });
-      /**
-       * Sanitizes an input into a string so it can be passed into issueCommand safely
-       * @param input input to sanitize into a string
-       */
-      function toCommandValue(input) {
-        if (input === null || input === undefined) {
-          return "";
-        } else if (typeof input === "string" || input instanceof String) {
-          return input;
-        }
-        return JSON.stringify(input);
-      }
-      exports.toCommandValue = toCommandValue;
-      //# sourceMappingURL=utils.js.map
-
-      /***/
-    },
-
-    /***/ 899: /***/ function(__unusedmodule, exports, __webpack_require__) {
-      "use strict";
-
-      var __importStar =
-        (this && this.__importStar) ||
-        function(mod) {
-          if (mod && mod.__esModule) return mod;
-          var result = {};
-          if (mod != null)
-            for (var k in mod)
-              if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-          result["default"] = mod;
-          return result;
-        };
-      Object.defineProperty(exports, "__esModule", { value: true });
-      const os = __importStar(__webpack_require__(87));
-      const utils_1 = __webpack_require__(889);
-      /**
-       * Commands
-       *
-       * Command Format:
-       *   ::name key=value,key=value::message
-       *
-       * Examples:
-       *   ::warning::This is the message
-       *   ::set-env name=MY_VAR::some value
-       */
-      function issueCommand(command, properties, message) {
-        const cmd = new Command(command, properties, message);
-        process.stdout.write(cmd.toString() + os.EOL);
-      }
-      exports.issueCommand = issueCommand;
-      function issue(name, message = "") {
-        issueCommand(name, {}, message);
-      }
-      exports.issue = issue;
-      const CMD_STRING = "::";
-      class Command {
-        constructor(command, properties, message) {
-          if (!command) {
-            command = "missing.command";
-          }
-          this.command = command;
-          this.properties = properties;
-          this.message = message;
-        }
-        toString() {
-          let cmdStr = CMD_STRING + this.command;
-          if (this.properties && Object.keys(this.properties).length > 0) {
-            cmdStr += " ";
-            let first = true;
-            for (const key in this.properties) {
-              if (this.properties.hasOwnProperty(key)) {
-                const val = this.properties[key];
-                if (val) {
-                  if (first) {
-                    first = false;
-                  } else {
-                    cmdStr += ",";
-                  }
-                  cmdStr += `${key}=${escapeProperty(val)}`;
-                }
-              }
-            }
-          }
-          cmdStr += `${CMD_STRING}${escapeData(this.message)}`;
-          return cmdStr;
-        }
-      }
-      function escapeData(s) {
-        return utils_1
-          .toCommandValue(s)
-          .replace(/%/g, "%25")
-          .replace(/\r/g, "%0D")
-          .replace(/\n/g, "%0A");
-      }
-      function escapeProperty(s) {
-        return utils_1
-          .toCommandValue(s)
-          .replace(/%/g, "%25")
-          .replace(/\r/g, "%0D")
-          .replace(/\n/g, "%0A")
-          .replace(/:/g, "%3A")
-          .replace(/,/g, "%2C");
-      }
-      //# sourceMappingURL=command.js.map
-
-      /***/
-    },
-
-    /***/ 939: /***/ function(__unusedmodule, exports, __webpack_require__) {
+    /***/ 574: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
       "use strict";
 
       var __awaiter =
@@ -6389,31 +6419,236 @@ module.exports = /******/ (function(modules, runtime) {
           return result;
         };
       Object.defineProperty(exports, "__esModule", { value: true });
-      var core = __importStar(__webpack_require__(33));
-      var installer = __importStar(__webpack_require__(289));
-      function run() {
+      var fs = __importStar(__nccwpck_require__(747));
+      var path = __importStar(__nccwpck_require__(622));
+      var core = __importStar(__nccwpck_require__(186));
+      var io = __importStar(__nccwpck_require__(436));
+      var tc = __importStar(__nccwpck_require__(784));
+      var httpm = __importStar(__nccwpck_require__(538));
+      var tempDirectory = process.env["RUNNER_TEMP"] || "";
+      var IS_WINDOWS = process.platform === "win32";
+      if (!tempDirectory) {
+        var baseLocation = void 0;
+        if (IS_WINDOWS) {
+          // On windows use the USERPROFILE env variable
+          baseLocation = process.env["USERPROFILE"] || "C:\\";
+        } else {
+          if (process.platform === "darwin") {
+            baseLocation = "/Users";
+          } else {
+            baseLocation = "/home";
+          }
+        }
+        tempDirectory = path.join(baseLocation, "actions", "temp");
+      }
+      var GHIDRA_BASE_URL = "https://ghidra-sre.org/";
+      var http = new httpm.HttpClient("setup-ghidra");
+      function getGhidraVersionInfo() {
         return __awaiter(this, void 0, void 0, function() {
-          var version;
+          var topPageHTML, releaseNoteURL, releaseNoteHTML, ptn, m, versionInfo;
           return __generator(this, function(_a) {
-            try {
-              version = core.getInput("version");
-              if (version) {
-                version = version == "latest" ? "" : version;
-                installer.installGhidra(version);
-              }
-            } catch (err) {
-              core.setFailed(err.message);
+            switch (_a.label) {
+              case 0:
+                return [4 /*yield*/, http.get(GHIDRA_BASE_URL)];
+              case 1:
+                return [4 /*yield*/, _a.sent().readBody()];
+              case 2:
+                topPageHTML = _a.sent();
+                releaseNoteURL =
+                  topPageHTML.match(/releaseNotes.*\.html/) || "";
+                return [
+                  4 /*yield*/,
+                  http.get(GHIDRA_BASE_URL + releaseNoteURL)
+                ];
+              case 3:
+                return [4 /*yield*/, _a.sent().readBody()];
+              case 4:
+                releaseNoteHTML = _a.sent();
+                ptn = /<td>(\d+\.\d+(?:\.\d+)?)<\/td>\r\n.*<a href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\">/gi;
+                versionInfo = {};
+                while ((m = ptn.exec(releaseNoteHTML)) !== null) {
+                  versionInfo[m[1]] = m[2];
+                }
+                return [2 /*return*/, versionInfo];
             }
-            return [2 /*return*/];
           });
         });
       }
-      run();
+      function getLatestGhidraVersionInfo() {
+        return __awaiter(this, void 0, void 0, function() {
+          var topPageHTML, m, latestVersionZip, latestVersionInfo, version;
+          return __generator(this, function(_a) {
+            switch (_a.label) {
+              case 0:
+                return [4 /*yield*/, http.get(GHIDRA_BASE_URL)];
+              case 1:
+                return [4 /*yield*/, _a.sent().readBody()];
+              case 2:
+                topPageHTML = _a.sent();
+                m = topPageHTML.match(
+                  /href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\"/
+                );
+                if (m === null) {
+                  throw new Error("Ghidra Archive List was not found.");
+                } else {
+                  latestVersionZip = m[1];
+                  latestVersionInfo = {};
+                  version = latestVersionZip.split("_")[1];
+                  latestVersionInfo[version] = latestVersionZip;
+                  return [2 /*return*/, latestVersionInfo];
+                }
+                return [2 /*return*/];
+            }
+          });
+        });
+      }
+      function extractFiles(file, destinationFolder) {
+        return __awaiter(this, void 0, void 0, function() {
+          var stats;
+          return __generator(this, function(_a) {
+            switch (_a.label) {
+              case 0:
+                return [4 /*yield*/, io.mkdirP(destinationFolder)];
+              case 1:
+                _a.sent();
+                stats = fs.statSync(file);
+                if (!stats) {
+                  throw new Error(
+                    "Failed to extract " + file + " - it doesn't exist"
+                  );
+                } else if (stats.isDirectory()) {
+                  throw new Error(
+                    "Failed to extract " + file + " - it is a directory"
+                  );
+                }
+                return [4 /*yield*/, tc.extractZip(file, destinationFolder)];
+              case 2:
+                _a.sent();
+                return [2 /*return*/];
+            }
+          });
+        });
+      }
+      function extractGhidraArchive(src, dst) {
+        return __awaiter(this, void 0, void 0, function() {
+          var ghidraArchivePath, stats, ghidraDirectory;
+          return __generator(this, function(_a) {
+            switch (_a.label) {
+              case 0:
+                ghidraArchivePath = path.normalize(src);
+                stats = fs.statSync(ghidraArchivePath);
+                if (!stats.isFile()) return [3 /*break*/, 2];
+                return [4 /*yield*/, extractFiles(src, dst)];
+              case 1:
+                _a.sent();
+                ghidraDirectory = path.join(dst, fs.readdirSync(dst)[0]);
+                return [2 /*return*/, ghidraDirectory];
+              case 2:
+                throw new Error(ghidraArchivePath + " is not a file");
+            }
+          });
+        });
+      }
+      function installGhidra(version, directLink) {
+        if (version === void 0) {
+          version = "";
+        }
+        if (directLink === void 0) {
+          directLink = "";
+        }
+        return __awaiter(this, void 0, void 0, function() {
+          var toolPath,
+            ghidraVersionInfo_1,
+            downloadURL,
+            info,
+            info,
+            err,
+            savedPath,
+            tempDir,
+            ghidraInstallDir;
+          return __generator(this, function(_a) {
+            switch (_a.label) {
+              case 0:
+                toolPath = tc.find("ghidra", version);
+                if (!toolPath) return [3 /*break*/, 1];
+                core.debug("Tool found in cache " + toolPath);
+                return [3 /*break*/, 11];
+              case 1:
+                ghidraVersionInfo_1 = { version: "", archive: "" };
+                downloadURL = "";
+                if (!directLink) return [3 /*break*/, 2];
+                downloadURL = directLink;
+                ghidraVersionInfo_1.version = version;
+                return [3 /*break*/, 7];
+              case 2:
+                if (!(version === "")) return [3 /*break*/, 4];
+                return [4 /*yield*/, getLatestGhidraVersionInfo()];
+              case 3:
+                info = _a.sent();
+                Object.entries(info).map(function(_a) {
+                  var _version = _a[0],
+                    ghidraZipName = _a[1];
+                  ghidraVersionInfo_1.version = _version;
+                  ghidraVersionInfo_1.archive = ghidraZipName;
+                });
+                return [3 /*break*/, 6];
+              case 4:
+                return [4 /*yield*/, getGhidraVersionInfo()];
+              case 5:
+                info = _a.sent();
+                if (info[version] === undefined) {
+                  err = new Error("[ERROR] " + version + " is not found.");
+                  throw err;
+                }
+                ghidraVersionInfo_1.version = version;
+                ghidraVersionInfo_1.archive = info[version];
+                _a.label = 6;
+              case 6:
+                downloadURL = GHIDRA_BASE_URL + ghidraVersionInfo_1.archive;
+                _a.label = 7;
+              case 7:
+                console.log(
+                  "Version: " +
+                    ghidraVersionInfo_1.version +
+                    ", Archive: " +
+                    ghidraVersionInfo_1.archive +
+                    ", URL: " +
+                    downloadURL
+                );
+                return [4 /*yield*/, tc.downloadTool(downloadURL)];
+              case 8:
+                savedPath = _a.sent();
+                tempDir = path.join(
+                  tempDirectory,
+                  "temp_" + Math.floor(Math.random() * 2000000000)
+                );
+                return [4 /*yield*/, extractGhidraArchive(savedPath, tempDir)];
+              case 9:
+                ghidraInstallDir = _a.sent();
+                return [
+                  4 /*yield*/,
+                  tc.cacheDir(ghidraInstallDir, "ghidra", version)
+                ];
+              case 10:
+                toolPath = _a.sent();
+                _a.label = 11;
+              case 11:
+                core.exportVariable("GHIDRA_INSTALL_DIR", toolPath);
+                return [2 /*return*/];
+            }
+          });
+        });
+      }
+      exports.installGhidra = installGhidra;
 
       /***/
     },
 
-    /***/ 942: /***/ function(__unusedmodule, exports, __webpack_require__) {
+    /***/ 900: /***/ function(
+      __unused_webpack_module,
+      exports,
+      __nccwpck_require__
+    ) {
       "use strict";
 
       var __awaiter =
@@ -6451,412 +6686,292 @@ module.exports = /******/ (function(modules, runtime) {
             );
           });
         };
-      Object.defineProperty(exports, "__esModule", { value: true });
-      const tr = __webpack_require__(271);
-      /**
-       * Exec a command.
-       * Output will be streamed to the live console.
-       * Returns promise with return code
-       *
-       * @param     commandLine        command to execute (can include additional args). Must be correctly escaped.
-       * @param     args               optional arguments for tool. Escaping is handled by the lib.
-       * @param     options            optional exec options.  See ExecOptions
-       * @returns   Promise<number>    exit code
-       */
-      function exec(commandLine, args, options) {
-        return __awaiter(this, void 0, void 0, function*() {
-          const commandArgs = tr.argStringToArray(commandLine);
-          if (commandArgs.length === 0) {
-            throw new Error(`Parameter 'commandLine' cannot be null or empty.`);
-          }
-          // Path to tool to execute should be first arg
-          const toolPath = commandArgs[0];
-          args = commandArgs.slice(1).concat(args || []);
-          const runner = new tr.ToolRunner(toolPath, args, options);
-          return runner.exec();
-        });
-      }
-      exports.exec = exec;
-      //# sourceMappingURL=exec.js.map
-
-      /***/
-    },
-
-    /***/ 960: /***/ function(module, __unusedexports, __webpack_require__) {
-      "use strict";
-
-      var utils = __webpack_require__(498);
-
-      var has = Object.prototype.hasOwnProperty;
-      var isArray = Array.isArray;
-
-      var defaults = {
-        allowDots: false,
-        allowPrototypes: false,
-        arrayLimit: 20,
-        charset: "utf-8",
-        charsetSentinel: false,
-        comma: false,
-        decoder: utils.decode,
-        delimiter: "&",
-        depth: 5,
-        ignoreQueryPrefix: false,
-        interpretNumericEntities: false,
-        parameterLimit: 1000,
-        parseArrays: true,
-        plainObjects: false,
-        strictNullHandling: false
-      };
-
-      var interpretNumericEntities = function(str) {
-        return str.replace(/&#(\d+);/g, function($0, numberStr) {
-          return String.fromCharCode(parseInt(numberStr, 10));
-        });
-      };
-
-      // This is what browsers will submit when the ✓ character occurs in an
-      // application/x-www-form-urlencoded body and the encoding of the page containing
-      // the form is iso-8859-1, or when the submitted form has an accept-charset
-      // attribute of iso-8859-1. Presumably also with other charsets that do not contain
-      // the ✓ character, such as us-ascii.
-      var isoSentinel = "utf8=%26%2310003%3B"; // encodeURIComponent('&#10003;')
-
-      // These are the percent-encoded utf-8 octets representing a checkmark, indicating that the request actually is utf-8 encoded.
-      var charsetSentinel = "utf8=%E2%9C%93"; // encodeURIComponent('✓')
-
-      var parseValues = function parseQueryStringValues(str, options) {
-        var obj = {};
-        var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, "") : str;
-        var limit =
-          options.parameterLimit === Infinity
-            ? undefined
-            : options.parameterLimit;
-        var parts = cleanStr.split(options.delimiter, limit);
-        var skipIndex = -1; // Keep track of where the utf8 sentinel was found
-        var i;
-
-        var charset = options.charset;
-        if (options.charsetSentinel) {
-          for (i = 0; i < parts.length; ++i) {
-            if (parts[i].indexOf("utf8=") === 0) {
-              if (parts[i] === charsetSentinel) {
-                charset = "utf-8";
-              } else if (parts[i] === isoSentinel) {
-                charset = "iso-8859-1";
-              }
-              skipIndex = i;
-              i = parts.length; // The eslint settings do not allow break;
-            }
-          }
-        }
-
-        for (i = 0; i < parts.length; ++i) {
-          if (i === skipIndex) {
-            continue;
-          }
-          var part = parts[i];
-
-          var bracketEqualsPos = part.indexOf("]=");
-          var pos =
-            bracketEqualsPos === -1 ? part.indexOf("=") : bracketEqualsPos + 1;
-
-          var key, val;
-          if (pos === -1) {
-            key = options.decoder(part, defaults.decoder, charset, "key");
-            val = options.strictNullHandling ? null : "";
-          } else {
-            key = options.decoder(
-              part.slice(0, pos),
-              defaults.decoder,
-              charset,
-              "key"
-            );
-            val = options.decoder(
-              part.slice(pos + 1),
-              defaults.decoder,
-              charset,
-              "value"
-            );
-          }
-
-          if (
-            val &&
-            options.interpretNumericEntities &&
-            charset === "iso-8859-1"
-          ) {
-            val = interpretNumericEntities(val);
-          }
-
-          if (
-            val &&
-            typeof val === "string" &&
-            options.comma &&
-            val.indexOf(",") > -1
-          ) {
-            val = val.split(",");
-          }
-
-          if (part.indexOf("[]=") > -1) {
-            val = isArray(val) ? [val] : val;
-          }
-
-          if (has.call(obj, key)) {
-            obj[key] = utils.combine(obj[key], val);
-          } else {
-            obj[key] = val;
-          }
-        }
-
-        return obj;
-      };
-
-      var parseObject = function(chain, val, options) {
-        var leaf = val;
-
-        for (var i = chain.length - 1; i >= 0; --i) {
-          var obj;
-          var root = chain[i];
-
-          if (root === "[]" && options.parseArrays) {
-            obj = [].concat(leaf);
-          } else {
-            obj = options.plainObjects ? Object.create(null) : {};
-            var cleanRoot =
-              root.charAt(0) === "[" && root.charAt(root.length - 1) === "]"
-                ? root.slice(1, -1)
-                : root;
-            var index = parseInt(cleanRoot, 10);
-            if (!options.parseArrays && cleanRoot === "") {
-              obj = { 0: leaf };
-            } else if (
-              !isNaN(index) &&
-              root !== cleanRoot &&
-              String(index) === cleanRoot &&
-              index >= 0 &&
-              options.parseArrays && index <= options.arrayLimit
-            ) {
-              obj = [];
-              obj[index] = leaf;
-            } else {
-              obj[cleanRoot] = leaf;
-            }
-          }
-
-          leaf = obj;
-        }
-
-        return leaf;
-      };
-
-      var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
-        if (!givenKey) {
-          return;
-        }
-
-        // Transform dot notation to bracket notation
-        var key = options.allowDots
-          ? givenKey.replace(/\.([^.[]+)/g, "[$1]")
-          : givenKey;
-
-        // The regex chunks
-
-        var brackets = /(\[[^[\]]*])/;
-        var child = /(\[[^[\]]*])/g;
-
-        // Get the parent
-
-        var segment = options.depth > 0 && brackets.exec(key);
-        var parent = segment ? key.slice(0, segment.index) : key;
-
-        // Stash the parent if it exists
-
-        var keys = [];
-        if (parent) {
-          // If we aren't using plain objects, optionally prefix keys that would overwrite object prototype properties
-          if (!options.plainObjects && has.call(Object.prototype, parent)) {
-            if (!options.allowPrototypes) {
-              return;
-            }
-          }
-
-          keys.push(parent);
-        }
-
-        // Loop through children appending to the array until we hit depth
-
-        var i = 0;
-        while (
-          options.depth > 0 &&
-          (segment = child.exec(key)) !== null &&
-          i < options.depth
-        ) {
-          i += 1;
-          if (
-            !options.plainObjects &&
-            has.call(Object.prototype, segment[1].slice(1, -1))
-          ) {
-            if (!options.allowPrototypes) {
-              return;
-            }
-          }
-          keys.push(segment[1]);
-        }
-
-        // If there's a remainder, just add whatever is left
-
-        if (segment) {
-          keys.push("[" + key.slice(segment.index) + "]");
-        }
-
-        return parseObject(keys, val, options);
-      };
-
-      var normalizeParseOptions = function normalizeParseOptions(opts) {
-        if (!opts) {
-          return defaults;
-        }
-
-        if (
-          opts.decoder !== null &&
-          opts.decoder !== undefined &&
-          typeof opts.decoder !== "function"
-        ) {
-          throw new TypeError("Decoder has to be a function.");
-        }
-
-        if (
-          typeof opts.charset !== "undefined" &&
-          opts.charset !== "utf-8" &&
-          opts.charset !== "iso-8859-1"
-        ) {
-          throw new Error(
-            "The charset option must be either utf-8, iso-8859-1, or undefined"
+      var __generator =
+        (this && this.__generator) ||
+        function(thisArg, body) {
+          var _ = {
+              label: 0,
+              sent: function() {
+                if (t[0] & 1) throw t[1];
+                return t[1];
+              },
+              trys: [],
+              ops: []
+            },
+            f,
+            y,
+            t,
+            g;
+          return (
+            (g = { next: verb(0), throw: verb(1), return: verb(2) }),
+            typeof Symbol === "function" &&
+              (g[Symbol.iterator] = function() {
+                return this;
+              }),
+            g
           );
-        }
-        var charset =
-          typeof opts.charset === "undefined" ? defaults.charset : opts.charset;
-
-        return {
-          allowDots:
-            typeof opts.allowDots === "undefined"
-              ? defaults.allowDots
-              : !!opts.allowDots,
-          allowPrototypes:
-            typeof opts.allowPrototypes === "boolean"
-              ? opts.allowPrototypes
-              : defaults.allowPrototypes,
-          arrayLimit:
-            typeof opts.arrayLimit === "number"
-              ? opts.arrayLimit
-              : defaults.arrayLimit,
-          charset: charset,
-          charsetSentinel:
-            typeof opts.charsetSentinel === "boolean"
-              ? opts.charsetSentinel
-              : defaults.charsetSentinel,
-          comma: typeof opts.comma === "boolean" ? opts.comma : defaults.comma,
-          decoder:
-            typeof opts.decoder === "function"
-              ? opts.decoder
-              : defaults.decoder,
-          delimiter:
-            typeof opts.delimiter === "string" || utils.isRegExp(opts.delimiter)
-              ? opts.delimiter
-              : defaults.delimiter,
-          // eslint-disable-next-line no-implicit-coercion, no-extra-parens
-          depth:
-            typeof opts.depth === "number" || opts.depth === false
-              ? +opts.depth
-              : defaults.depth,
-          ignoreQueryPrefix: opts.ignoreQueryPrefix === true,
-          interpretNumericEntities:
-            typeof opts.interpretNumericEntities === "boolean"
-              ? opts.interpretNumericEntities
-              : defaults.interpretNumericEntities,
-          parameterLimit:
-            typeof opts.parameterLimit === "number"
-              ? opts.parameterLimit
-              : defaults.parameterLimit,
-          parseArrays: opts.parseArrays !== false,
-          plainObjects:
-            typeof opts.plainObjects === "boolean"
-              ? opts.plainObjects
-              : defaults.plainObjects,
-          strictNullHandling:
-            typeof opts.strictNullHandling === "boolean"
-              ? opts.strictNullHandling
-              : defaults.strictNullHandling
+          function verb(n) {
+            return function(v) {
+              return step([n, v]);
+            };
+          }
+          function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_)
+              try {
+                if (
+                  ((f = 1),
+                  y &&
+                    (t =
+                      op[0] & 2
+                        ? y["return"]
+                        : op[0]
+                        ? y["throw"] || ((t = y["return"]) && t.call(y), 0)
+                        : y.next) &&
+                    !(t = t.call(y, op[1])).done)
+                )
+                  return t;
+                if (((y = 0), t)) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                  case 0:
+                  case 1:
+                    t = op;
+                    break;
+                  case 4:
+                    _.label++;
+                    return { value: op[1], done: false };
+                  case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [0];
+                    continue;
+                  case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                  default:
+                    if (
+                      !((t = _.trys), (t = t.length > 0 && t[t.length - 1])) &&
+                      (op[0] === 6 || op[0] === 2)
+                    ) {
+                      _ = 0;
+                      continue;
+                    }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
+                      _.label = op[1];
+                      break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                      _.label = t[1];
+                      t = op;
+                      break;
+                    }
+                    if (t && _.label < t[2]) {
+                      _.label = t[2];
+                      _.ops.push(op);
+                      break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                }
+                op = body.call(thisArg, _);
+              } catch (e) {
+                op = [6, e];
+                y = 0;
+              } finally {
+                f = t = 0;
+              }
+            if (op[0] & 5) throw op[1];
+            return { value: op[0] ? op[1] : void 0, done: true };
+          }
         };
-      };
-
-      module.exports = function(str, opts) {
-        var options = normalizeParseOptions(opts);
-
-        if (str === "" || str === null || typeof str === "undefined") {
-          return options.plainObjects ? Object.create(null) : {};
-        }
-
-        var tempObj = typeof str === "string" ? parseValues(str, options) : str;
-        var obj = options.plainObjects ? Object.create(null) : {};
-
-        // Iterate over the keys and setup the new object
-
-        var keys = Object.keys(tempObj);
-        for (var i = 0; i < keys.length; ++i) {
-          var key = keys[i];
-          var newObj = parseKeys(key, tempObj[key], options);
-          obj = utils.merge(obj, newObj, options);
-        }
-
-        return utils.compact(obj);
-      };
+      var __importStar =
+        (this && this.__importStar) ||
+        function(mod) {
+          if (mod && mod.__esModule) return mod;
+          var result = {};
+          if (mod != null)
+            for (var k in mod)
+              if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+          result["default"] = mod;
+          return result;
+        };
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var core = __importStar(__nccwpck_require__(186));
+      var installer = __importStar(__nccwpck_require__(574));
+      function run() {
+        return __awaiter(this, void 0, void 0, function() {
+          var version, directLink;
+          return __generator(this, function(_a) {
+            try {
+              version = core.getInput("version");
+              directLink = core.getInput("directLink");
+              if (version) {
+                if (directLink) {
+                  installer.installGhidra(version, directLink);
+                } else {
+                  version = version == "latest" ? "" : version;
+                  installer.installGhidra(version);
+                }
+              }
+            } catch (err) {
+              core.setFailed(err.message);
+            }
+            return [2 /*return*/];
+          });
+        });
+      }
+      run();
 
       /***/
     },
 
-    /***/ 975: /***/ function(module) {
-      /**
-       * Convert array of 16 byte values to UUID string format of the form:
-       * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-       */
-      var byteToHex = [];
-      for (var i = 0; i < 256; ++i) {
-        byteToHex[i] = (i + 0x100).toString(16).substr(1);
-      }
+    /***/ 357: /***/ module => {
+      "use strict";
+      module.exports = require("assert");
 
-      function bytesToUuid(buf, offset) {
-        var i = offset || 0;
-        var bth = byteToHex;
-        // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-        return [
-          bth[buf[i++]],
-          bth[buf[i++]],
-          bth[buf[i++]],
-          bth[buf[i++]],
-          "-",
-          bth[buf[i++]],
-          bth[buf[i++]],
-          "-",
-          bth[buf[i++]],
-          bth[buf[i++]],
-          "-",
-          bth[buf[i++]],
-          bth[buf[i++]],
-          "-",
-          bth[buf[i++]],
-          bth[buf[i++]],
-          bth[buf[i++]],
-          bth[buf[i++]],
-          bth[buf[i++]],
-          bth[buf[i++]]
-        ].join("");
-      }
+      /***/
+    },
 
-      module.exports = bytesToUuid;
+    /***/ 129: /***/ module => {
+      "use strict";
+      module.exports = require("child_process");
+
+      /***/
+    },
+
+    /***/ 417: /***/ module => {
+      "use strict";
+      module.exports = require("crypto");
+
+      /***/
+    },
+
+    /***/ 614: /***/ module => {
+      "use strict";
+      module.exports = require("events");
+
+      /***/
+    },
+
+    /***/ 747: /***/ module => {
+      "use strict";
+      module.exports = require("fs");
+
+      /***/
+    },
+
+    /***/ 605: /***/ module => {
+      "use strict";
+      module.exports = require("http");
+
+      /***/
+    },
+
+    /***/ 211: /***/ module => {
+      "use strict";
+      module.exports = require("https");
+
+      /***/
+    },
+
+    /***/ 631: /***/ module => {
+      "use strict";
+      module.exports = require("net");
+
+      /***/
+    },
+
+    /***/ 87: /***/ module => {
+      "use strict";
+      module.exports = require("os");
+
+      /***/
+    },
+
+    /***/ 622: /***/ module => {
+      "use strict";
+      module.exports = require("path");
+
+      /***/
+    },
+
+    /***/ 16: /***/ module => {
+      "use strict";
+      module.exports = require("tls");
+
+      /***/
+    },
+
+    /***/ 835: /***/ module => {
+      "use strict";
+      module.exports = require("url");
+
+      /***/
+    },
+
+    /***/ 669: /***/ module => {
+      "use strict";
+      module.exports = require("util");
+
+      /***/
+    },
+
+    /***/ 761: /***/ module => {
+      "use strict";
+      module.exports = require("zlib");
 
       /***/
     }
 
     /******/
-  }
-);
+  }; // The module cache
+  /************************************************************************/
+  /******/ /******/ var __webpack_module_cache__ = {}; // The require function
+  /******/
+
+  /******/ /******/ function __nccwpck_require__(moduleId) {
+    /******/ // Check if module is in cache
+    /******/ if (__webpack_module_cache__[moduleId]) {
+      /******/ return __webpack_module_cache__[moduleId].exports;
+      /******/
+    } // Create a new module (and put it into the cache)
+    /******/ /******/ var module = (__webpack_module_cache__[moduleId] = {
+      /******/ // no module.id needed
+      /******/ // no module.loaded needed
+      /******/ exports: {}
+      /******/
+    }); // Execute the module function
+    /******/
+
+    /******/ /******/ var threw = true;
+    /******/ try {
+      /******/ __webpack_modules__[moduleId].call(
+        module.exports,
+        module,
+        module.exports,
+        __nccwpck_require__
+      );
+      /******/ threw = false;
+      /******/
+    } finally {
+      /******/ if (threw) delete __webpack_module_cache__[moduleId];
+      /******/
+    } // Return the exports of the module
+    /******/
+
+    /******/ /******/ return module.exports;
+    /******/
+  } /* webpack/runtime/compat */
+  /******/
+
+  /************************************************************************/
+  /******/ /******/
+
+  /******/ __nccwpck_require__.ab =
+    __dirname +
+    "/"; /************************************************************************/ // module exports must be returned from runtime so entry inlining is disabled // startup // Load entry module and return exports
+  /******/ /******/ /******/ /******/ return __nccwpck_require__(900);
+  /******/
+})();

@@ -7,6 +7,10 @@ inputs:
     description: version of Ghidra
     required: true
     default: latest
+  directLink:
+    description: direct link to the archive file (for custom forks)
+    required: false
+    default: None
 runs:
   using: "node12"
   main: "dist/index.js"
