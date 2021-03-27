@@ -92,19 +92,21 @@ async function extractGhidraArchive(src: string, dst: string): Promise<string> {
   }
 }
 
-export async function installGhidra(version: string = "", directLink: string = ""): Promise<void> {
+export async function installGhidra(
+  version: string = "",
+  directLink: string = ""
+): Promise<void> {
   let toolPath = tc.find("ghidra", version);
 
   if (toolPath) {
     core.debug(`Tool found in cache ${toolPath}`);
   } else {
     let ghidraVersionInfo: any = { version: "", archive: "" };
-    let downloadURL: string = ""
+    let downloadURL: string = "";
     if (directLink) {
-      downloadURL = directLink
-      ghidraVersionInfo.version = version
-    }
-    else {
+      downloadURL = directLink;
+      ghidraVersionInfo.version = version;
+    } else {
       if (version === "") {
         let info = await getLatestGhidraVersionInfo();
         Object.entries(info).map(([_version, ghidraZipName]) => {
@@ -120,15 +122,13 @@ export async function installGhidra(version: string = "", directLink: string = "
         ghidraVersionInfo.version = version;
         ghidraVersionInfo.archive = info[version];
       }
-      downloadURL = GHIDRA_BASE_URL + ghidraVersionInfo.archive
+      downloadURL = GHIDRA_BASE_URL + ghidraVersionInfo.archive;
     }
 
     console.log(
       `Version: ${ghidraVersionInfo.version}, Archive: ${ghidraVersionInfo.archive}, URL: ${downloadURL}`
     );
-    let savedPath = await tc.downloadTool(
-      downloadURL
-    );
+    let savedPath = await tc.downloadTool(downloadURL);
 
     let tempDir: string = path.join(
       tempDirectory,

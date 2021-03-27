@@ -6,10 +6,9 @@ async function run() {
     let version = core.getInput("version");
     let directLink = core.getInput("directLink");
     if (version) {
-      if (directLink){
-        installer.installGhidra(version, directLink)
-      }
-      else {
+      if (directLink) {
+        installer.installGhidra(version, directLink);
+      } else {
         version = version == "latest" ? "" : version;
         installer.installGhidra(version);
       }
