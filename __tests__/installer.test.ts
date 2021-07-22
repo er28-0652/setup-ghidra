@@ -43,6 +43,7 @@ describe("installer tests", () => {
     const ghidraDir = path.join(toolDir, "ghidra", "10.0", "x64");
 
     expect(fs.existsSync(path.join(ghidraDir, "ghidraRun"))).toBe(true);
+    expect(process.env["GHIDRA_INSTALL_DIR"]).toBe(ghidraDir);
   }, 100000);
 
   it("Throws if invalid directory to Ghidra", async () => {
@@ -54,10 +55,4 @@ describe("installer tests", () => {
     }
     expect(thrown).toBe(true);
   });
-
-  it("Get GHIDRA_INSTALL_DIR is defined", async () => {
-    await installer.installGhidra("10.0");
-    const ghidraDir = path.join(toolDir, "ghidra", "10.0", "x64");
-    expect(process.env["GHIDRA_INSTALL_DIR"]).toBe(ghidraDir);
-  }, 100000);
 });
