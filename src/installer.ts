@@ -3,7 +3,7 @@ import * as path from "path";
 import * as core from "@actions/core";
 import * as io from "@actions/io";
 import * as tc from "@actions/tool-cache";
-import * as httpm from "typed-rest-client/HttpClient";
+import { Octokit } from "@octokit/rest";
 
 let tempDirectory = process.env["RUNNER_TEMP"] || "";
 const IS_WINDOWS = process.platform === "win32";
@@ -23,46 +23,51 @@ if (!tempDirectory) {
   tempDirectory = path.join(baseLocation, "actions", "temp");
 }
 
-const GHIDRA_BASE_URL = "https://ghidra-sre.org/";
-const http: httpm.HttpClient = new httpm.HttpClient("setup-ghidra");
+const REPO_OWNER = "NationalSecurityAgency";
+const REPO_NAME = "ghidra";
+const octokit = new Octokit();
 
 interface Dict {
   [key: string]: string;
 }
 
-async function getGhidraVersionInfo(): Promise<Dict> {
-  // get release page
-  let topPageHTML = await (await http.get(GHIDRA_BASE_URL)).readBody();
-  let releaseNoteURL = topPageHTML.match(/releaseNotes.*\.html/) || "";
+async function getDownloadURLByTag(tag: string): Promise<string> {
+  let tagName = `Ghidra_${tag}_build`;
+  let response = await octokit.rest.repos.getReleaseByTag({
+    owner: REPO_OWNER,
+    repo: REPO_NAME,
+    tag: tagName
+  });
 
-  let releaseNoteHTML = await (
-    await http.get(GHIDRA_BASE_URL + releaseNoteURL)
-  ).readBody();
-
-  // parse Ghidra version numbre and archive name
-  const ptn = /<td>(\d+\.\d+(?:\.\d+)?)<\/td>\r\n.*<a href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\">/gi;
-  let m;
-  let versionInfo: Dict = {};
-  while ((m = ptn.exec(releaseNoteHTML)) !== null) {
-    versionInfo[m[1]] = m[2];
+  if (response.status != 200) {
+    throw new Error(`not found tag: ${tagName}`);
   }
-  return versionInfo;
+
+  let assets = await octokit.rest.repos.listReleaseAssets({
+    owner: REPO_OWNER,
+    repo: REPO_NAME,
+    release_id: response.data.id
+  });
+
+  return assets.data[0].browser_download_url;
 }
 
-async function getLatestGhidraVersionInfo(): Promise<Dict> {
-  let topPageHTML = await (await http.get(GHIDRA_BASE_URL)).readBody();
-
-  let m = topPageHTML.match(/href=\"(ghidra_.*?_PUBLIC_\d{8}\.zip)\"/);
-  if (m === null) {
-    throw new Error("Ghidra Archive List was not found.");
-  } else {
-    let latestVersionZip = m[1];
-    let latestVersionInfo: Dict = {};
-
-    let version = latestVersionZip.split("_")[1];
-    latestVersionInfo[version] = latestVersionZip;
-    return latestVersionInfo;
+async function getLatestDownloadURL(): Promise<string> {
+  let response = await octokit.rest.repos.getLatestRelease({
+    owner: REPO_OWNER,
+    repo: REPO_NAME
+  });
+  if (response.status != 200) {
+    throw new Error(`error status: ${response.status}`);
   }
+
+  let assets = await octokit.rest.repos.listReleaseAssets({
+    owner: REPO_OWNER,
+    repo: REPO_NAME,
+    release_id: response.data.id
+  });
+
+  return assets.data[0].browser_download_url;
 }
 
 async function extractFiles(
@@ -101,33 +106,23 @@ export async function installGhidra(
   if (toolPath) {
     core.debug(`Tool found in cache ${toolPath}`);
   } else {
-    let ghidraVersionInfo: any = { version: "", archive: "" };
     let downloadURL: string = "";
     if (directLink) {
       downloadURL = directLink;
-      ghidraVersionInfo.version = version;
     } else {
       if (version === "") {
-        let info = await getLatestGhidraVersionInfo();
-        Object.entries(info).map(([_version, ghidraZipName]) => {
-          ghidraVersionInfo.version = _version;
-          ghidraVersionInfo.archive = ghidraZipName;
-        });
+        version = "latest";
+        downloadURL = await getLatestDownloadURL();
       } else {
-        let info = await getGhidraVersionInfo();
-        if (info[version] === undefined) {
-          const err: Error = new Error(`[ERROR] ${version} is not found.`);
-          throw err;
-        }
-        ghidraVersionInfo.version = version;
-        ghidraVersionInfo.archive = info[version];
+        downloadURL = await getDownloadURLByTag(version);
       }
-      downloadURL = GHIDRA_BASE_URL + ghidraVersionInfo.archive;
+
+      if (downloadURL === "") {
+        throw new Error(`[ERROR] ${version} is not found.`);
+      }
     }
 
-    console.log(
-      `Version: ${ghidraVersionInfo.version}, Archive: ${ghidraVersionInfo.archive}, URL: ${downloadURL}`
-    );
+    console.log(`Version: ${version}, URL: ${downloadURL}`);
     let savedPath = await tc.downloadTool(downloadURL);
 
     let tempDir: string = path.join(

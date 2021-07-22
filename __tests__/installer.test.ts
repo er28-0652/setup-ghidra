@@ -11,7 +11,8 @@ process.env["RUNNER_TEMP"] = tempDir;
 import * as installer from "../src/installer";
 
 const ghidraFilePath = path.join(tempDir, "ghidra.zip");
-const ghidraUrl = "https://ghidra-sre.org/ghidra_9.1.1_PUBLIC_20191218.zip";
+const ghidraUrl =
+  "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.0_build/ghidra_10.0_PUBLIC_20210621.zip";
 
 describe("installer tests", () => {
   beforeAll(async () => {
@@ -38,8 +39,8 @@ describe("installer tests", () => {
   }, 100000);
 
   it("Installs version of Ghidra if no matching version is installed", async () => {
-    await installer.installGhidra("9.1.1");
-    const ghidraDir = path.join(toolDir, "ghidra", "9.1.1", "x64");
+    await installer.installGhidra("10.0");
+    const ghidraDir = path.join(toolDir, "ghidra", "10.0", "x64");
 
     expect(fs.existsSync(path.join(ghidraDir, "ghidraRun"))).toBe(true);
   }, 100000);
@@ -55,8 +56,8 @@ describe("installer tests", () => {
   });
 
   it("Get GHIDRA_INSTALL_DIR is defined", async () => {
-    await installer.installGhidra("9.1.1");
-    const ghidraDir = path.join(toolDir, "ghidra", "9.1.1", "x64");
+    await installer.installGhidra("10.0");
+    const ghidraDir = path.join(toolDir, "ghidra", "10.0", "x64");
     expect(process.env["GHIDRA_INSTALL_DIR"]).toBe(ghidraDir);
-  });
+  }, 100000);
 });
