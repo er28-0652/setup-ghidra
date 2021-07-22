@@ -12715,13 +12715,12 @@ module.exports = /******/ (function(modules, runtime) {
             try {
               version = core.getInput("version");
               directLink = core.getInput("directLink");
-              if (version) {
-                if (directLink) {
-                  installer.installGhidra(version, directLink);
-                } else {
-                  version = version == "latest" ? "" : version;
-                  installer.installGhidra(version);
-                }
+              // if user specified directLink, use it
+              if (directLink) {
+                installer.installGhidra(version, directLink);
+              } else {
+                version = version == "latest" ? "" : version;
+                installer.installGhidra(version);
               }
             } catch (err) {
               core.setFailed(err.message);

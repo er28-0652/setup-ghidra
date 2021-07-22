@@ -10,7 +10,7 @@ inputs:
   directLink:
     description: direct link to the archive file (for custom forks)
     required: false
-    default: None
+    default: ""
 runs:
   using: "node12"
   main: "dist/index.js"
