@@ -92,36 +92,43 @@ async function extractGhidraArchive(src: string, dst: string): Promise<string> {
   }
 }
 
-export async function installGhidra(version: string = ""): Promise<void> {
+export async function installGhidra(
+  version: string = "",
+  directLink: string = ""
+): Promise<void> {
   let toolPath = tc.find("ghidra", version);
 
   if (toolPath) {
     core.debug(`Tool found in cache ${toolPath}`);
   } else {
     let ghidraVersionInfo: any = { version: "", archive: "" };
-
-    if (version === "") {
-      let info = await getLatestGhidraVersionInfo();
-      Object.entries(info).map(([_version, ghidraZipName]) => {
-        ghidraVersionInfo.version = _version;
-        ghidraVersionInfo.archive = ghidraZipName;
-      });
-    } else {
-      let info = await getGhidraVersionInfo();
-      if (info[version] === undefined) {
-        const err: Error = new Error(`[ERROR] ${version} is not found.`);
-        throw err;
-      }
+    let downloadURL: string = "";
+    if (directLink) {
+      downloadURL = directLink;
       ghidraVersionInfo.version = version;
-      ghidraVersionInfo.archive = info[version];
+    } else {
+      if (version === "") {
+        let info = await getLatestGhidraVersionInfo();
+        Object.entries(info).map(([_version, ghidraZipName]) => {
+          ghidraVersionInfo.version = _version;
+          ghidraVersionInfo.archive = ghidraZipName;
+        });
+      } else {
+        let info = await getGhidraVersionInfo();
+        if (info[version] === undefined) {
+          const err: Error = new Error(`[ERROR] ${version} is not found.`);
+          throw err;
+        }
+        ghidraVersionInfo.version = version;
+        ghidraVersionInfo.archive = info[version];
+      }
+      downloadURL = GHIDRA_BASE_URL + ghidraVersionInfo.archive;
     }
 
     console.log(
-      `Version: ${ghidraVersionInfo.version}, Archive: ${ghidraVersionInfo.archive}`
+      `Version: ${ghidraVersionInfo.version}, Archive: ${ghidraVersionInfo.archive}, URL: ${downloadURL}`
     );
-    let savedPath = await tc.downloadTool(
-      GHIDRA_BASE_URL + ghidraVersionInfo.archive
-    );
+    let savedPath = await tc.downloadTool(downloadURL);
 
     let tempDir: string = path.join(
       tempDirectory,
