@@ -25,7 +25,7 @@ if (!tempDirectory) {
 
 const REPO_OWNER = "NationalSecurityAgency";
 const REPO_NAME = "ghidra";
-const octokit = new Octokit();
+let octokit = new Octokit();
 
 interface Dict {
   [key: string]: string;
@@ -95,6 +95,10 @@ async function extractGhidraArchive(src: string, dst: string): Promise<string> {
   } else {
     throw new Error(`${ghidraArchivePath} is not a file`);
   }
+}
+
+export function setAuthToken(token: string) {
+  octokit = new Octokit({ auth: token });
 }
 
 export async function installGhidra(

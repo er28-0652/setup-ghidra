@@ -11,6 +11,10 @@ inputs:
     description: direct link to the archive file (for custom forks)
     required: false
     default: ""
+  repo-token:
+    description: The GITHUB_TOKEN secret
+    required: false
+    default: ""
 runs:
   using: "node12"
   main: "dist/index.js"
