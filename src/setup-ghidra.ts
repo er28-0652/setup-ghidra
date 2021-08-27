@@ -5,6 +5,11 @@ async function run() {
   try {
     let version = core.getInput("version");
     let directLink = core.getInput("directLink");
+    let repoToken = core.getInput("repo-token");
+
+    if (repoToken) {
+      installer.setAuthToken(repoToken);
+    }
 
     // if user specified directLink, use it
     if (directLink) {

@@ -10,6 +10,11 @@ process.env["RUNNER_TOOL_CACHE"] = toolDir;
 process.env["RUNNER_TEMP"] = tempDir;
 import * as installer from "../src/installer";
 
+const repoToken = process.env["AUTH_TOKEN"];
+if (repoToken) {
+  installer.setAuthToken(repoToken);
+}
+
 const ghidraFilePath = path.join(tempDir, "ghidra.zip");
 const ghidraUrl =
   "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.0_build/ghidra_10.0_PUBLIC_20210621.zip";
